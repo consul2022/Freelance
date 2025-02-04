@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'exchange',
 ]
 
 MIDDLEWARE = [
@@ -54,7 +55,7 @@ ROOT_URLCONF = 'freelance.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / "templates"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -75,7 +76,12 @@ WSGI_APPLICATION = 'freelance.wsgi.application'
 
 DATABASES = {
     'default': {
-        c
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DATABASE_NAME', 'INNOfreelance'),
+        'USER': os.getenv('DATABASE_USER', 'user'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'consul'),
+        'HOST': os.getenv('DATABASE_HOST', 'pgdb'),
+        'PORT': os.getenv('DATABASE_PORT', '5432'),
     }
 }
 
@@ -115,6 +121,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_DIR = [BASE_DIR / 'static']
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

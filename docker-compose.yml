@@ -4,11 +4,14 @@ services:
   django:
     build: .
     container_name: django
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "sleep 5 && python freelance/manage.py migrate && python freelance/manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/usr/src/app
     ports:
-      - 8000:8000
+      - "8000:8000"
+    env_file:
+      - .env
     depends_on:
       - pgdb
 
@@ -20,4 +23,8 @@ services:
       - POSTGRES_PASSWORD=consul
     container_name: pgdb
     volumes:
-      - pgdbdata:/var/lib/postgresql/data/
+      - pgdb_data:/var/lib/postgresql/data/
+
+
+volumes:
+  pgdb_data:
