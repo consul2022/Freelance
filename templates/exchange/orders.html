@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список заказов</title>
+    <link rel="stylesheet" href="{% static 'exchange/css/orders.css' %}">
+    <script defer src="{% static 'exchange/js/orders.js' %}"></script>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h3>Сфера деятельности</h3>
+            <ul class="filters">
+                {% for category, subcats in subactivities.items %}
+                    <li class="category">
+                        <label>
+                            <input type="checkbox" class="category-checkbox" data-category="{{ category.value }}">
+                            {{ category.label }}
+                        </label>
+                        <ul class="subcategories">
+                            {% for subcat in subcats %}
+                                <li>
+                                    <label>
+                                        <input type="checkbox" class="subcategory-checkbox" data-subcategory="{{ subcat.0 }}">
+                                        {{ subcat.1 }}
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        </aside>
+        <main class="orders-container">
+            <h2>Заказы ({{ orders|length }})</h2>
+            <input type="text" id="search" placeholder="Поиск заказов...">
+            <div class="orders-list">
+                {% for order in orders %}
+                    <div class="order-card" data-category="{{ order.activity }}" data-subcategory="{{ order.subactivity }}">
+                        <h3>{{ order.name }}</h3>
+                        <p>{{ order.description }}</p>
+                        <p><strong>{{ order.price }} руб.</strong></p>
+                        <p>{{ order.views }} просмотров</p>
+                        <div class="tags">
+                            {% for tag in order.tags.all %}
+                                <span class="tag">{{ tag.name }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </main>
+    </div>
+    <div class="mobile-filter-button" onclick="toggleFilters()">Фильтры</div>
+</body>
+</html>

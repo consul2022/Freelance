@@ -5,7 +5,7 @@ services:
     build: .
     container_name: django
     command: >
-      sh -c "sleep 5 && python freelance/manage.py migrate && python freelance/manage.py runserver 0.0.0.0:8000"
+      sh -c "sleep 5 && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/usr/src/app
     ports:
