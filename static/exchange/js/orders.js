@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const categoryCheckboxes = document.querySelectorAll(".category-checkbox");
     const subcategoryCheckboxes = document.querySelectorAll(".subcategory-checkbox");
 
+    // поиск по заказам
     searchInput.addEventListener("input", function () {
         const searchText = this.value.toLowerCase();
         orderCards.forEach(card => {
@@ -12,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+    // фильтрация заказов по категориям и подкатегориям
     function applyFilters() {
         let activeCategories = new Set();
         let activeSubcategories = new Set();
@@ -44,8 +46,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     categoryCheckboxes.forEach(checkbox => checkbox.addEventListener("change", applyFilters));
     subcategoryCheckboxes.forEach(checkbox => checkbox.addEventListener("change", applyFilters));
-
-    document.querySelector(".mobile-filter-button").addEventListener("click", function () {
-        document.querySelector(".sidebar").classList.toggle("active");
-    });
 });
+
+// переключение видимости фильтров на мобильных устройствах
+function toggleFilters() {
+    document.querySelector(".sidebar").classList.toggle("active");
+}
+
+// сворачивание/разворачивание списка подкатегорий
+function toggleSubcategories(element) {
+    const subcategoriesList = element.closest(".category").querySelector(".subcategories");
+    if (subcategoriesList.style.display === "none" || subcategoriesList.style.display === "") {
+        subcategoriesList.style.display = "block";
+        element.innerHTML = "&#9650;"; // стрелка вверх
+    } else {
+        subcategoriesList.style.display = "none";
+        element.innerHTML = "&#9660;"; // стрелка вниз
+    }
+}
+
