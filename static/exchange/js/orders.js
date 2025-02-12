@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const categoryCheckboxes = document.querySelectorAll(".category-checkbox");
     const subcategoryCheckboxes = document.querySelectorAll(".subcategory-checkbox");
 
-    // поиск по заказам
+    // Поиск по заказам
     searchInput.addEventListener("input", function () {
         const searchText = this.value.toLowerCase();
         orderCards.forEach(card => {
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // фильтрация заказов по категориям и подкатегориям
+    // Фильтрация заказов по категориям и подкатегориям
     function applyFilters() {
         let activeCategories = new Set();
         let activeSubcategories = new Set();
@@ -48,20 +48,22 @@ document.addEventListener("DOMContentLoaded", function () {
     subcategoryCheckboxes.forEach(checkbox => checkbox.addEventListener("change", applyFilters));
 });
 
-// переключение видимости фильтров на мобильных устройствах
+// Переключение видимости фильтров на мобильных устройствах
 function toggleFilters() {
-    document.querySelector(".sidebar").classList.toggle("active");
+    const sidebar = document.querySelector(".sidebar");
+    const overlay = document.querySelector(".sidebar-overlay");
+    sidebar.classList.toggle("active");
+    overlay.style.display = sidebar.classList.contains("active") ? "block" : "none";
 }
 
-// сворачивание/разворачивание списка подкатегорий
-function toggleSubcategories(element) {
-    const subcategoriesList = element.closest(".category").querySelector(".subcategories");
-    if (subcategoriesList.style.display === "none" || subcategoriesList.style.display === "") {
-        subcategoriesList.style.display = "block";
-        element.innerHTML = "&#9650;"; // стрелка вверх
-    } else {
-        subcategoriesList.style.display = "none";
-        element.innerHTML = "&#9660;"; // стрелка вниз
-    }
+// Сворачивание/разворачивание списка подкатегорий без изменения текста пункта
+function toggleSubcategories(labelElement) {
+    const categoryItem = labelElement.closest(".category");
+    const subcategoriesList = categoryItem.querySelector(".subcategories");
+    subcategoriesList.classList.toggle("active");
+//    if (subcategoriesList.style.display === "none" || subcategoriesList.style.display === "") {
+//        subcategoriesList.style.display = "block";
+//    } else {
+//        subcategoriesList.style.display = "none";
+//    }
 }
-

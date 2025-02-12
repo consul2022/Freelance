@@ -16,18 +16,21 @@
     <div class="container">
         <!-- Сайдбар с фильтрами -->
         <aside class="sidebar">
+            <!-- Кнопка возврата для мобильной версии -->
+            <div class="mobile-back-button" onclick="toggleFilters()">
+                &larr;
+            </div>
             <h3>сферы деятельности</h3>
             <ul class="filters">
                 {% for category, subcats in subactivities.items %}
                     <li class="category">
                         <div class="category-header">
-                            <label>
+                            <label class="category-label" onclick="toggleSubcategories(this)">
                                 <input type="checkbox" class="category-checkbox" data-category="{{ category.value }}">
                                 {{ category.label }}
                             </label>
-                            <span class="toggle-button" onclick="toggleSubcategories(this)" style="cursor: pointer;">&#9660;</span>
                         </div>
-                        <ul class="subcategories" style="display: none;">
+                        <ul class="subcategories">
                             {% for subcat in subcats %}
                                 <li>
                                     <label>
@@ -41,6 +44,8 @@
                 {% endfor %}
             </ul>
         </aside>
+        <!-- Оверлей для закрытия боковой панели при клике вне фильтров (только мобильная версия) -->
+        <div class="sidebar-overlay" onclick="toggleFilters()"></div>
         <!-- Основная секция заказов -->
         <main class="orders-container">
             <h2>заказы ({{ orders|length }})</h2>

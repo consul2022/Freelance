@@ -4,7 +4,7 @@ body {
     background-color: #1e1e2e;
     color: #e0e0e0;
     margin: 0;
-    padding: 20px; /* Добавлен отступ от краёв окна */
+    padding: 20px; /* Отступ от краёв окна */
 }
 
 /* Верхняя панель */
@@ -20,6 +20,7 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     gap: 20px;
+    position: relative;
 }
 
 /* Сайдбар */
@@ -30,13 +31,44 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease;
+    position: relative;
+    z-index: 1001;
 }
 
-/* Убираем точки у списков фильтров */
+/* Кнопка возврата для мобильной версии */
+.mobile-back-button {
+    display: none;
+    font-size: 2rem;
+    color: #9C78FF;
+    cursor: pointer;
+    margin-bottom: 15px;
+    padding: 5px 10px;
+    border: 1px solid #9C78FF;
+    border-radius: 5px;
+    text-align: center;
+    width: fit-content;
+}
+
+/* Оверлей для мобильной версии */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+}
+
+/* Убираем маркеры списков */
 .filters, .subcategories {
     list-style: none;
     padding: 0;
     margin: 0;
+}
+.subcategories.active {
+display: block;
 }
 
 .sidebar h3 {
@@ -45,15 +77,23 @@ body {
     margin-bottom: 15px;
 }
 
-.filters label {
-    display: block;
-    padding: 8px 0;
-    font-size: 0.9rem;
-    cursor: pointer;
+/* Заголовок категории */
+.category-header {
+    margin-bottom: 5px;
 }
 
-.filters input {
-    margin-right: 10px;
+/* Подпись категории – остаётся неизменной */
+.category-label {
+    display: block;
+    padding: 8px 0;
+    font-size: 1.1rem;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+/* Сдвиг списка подкатегорий немного вправо */
+.subcategories {
+    margin-left: 10px;
 }
 
 /* Основная секция заказов */
@@ -169,6 +209,7 @@ body {
     width: 150px;
 }
 
+
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
     .container {
@@ -184,13 +225,16 @@ body {
         background: #252532;
         box-shadow: -4px 0 8px rgba(0, 0, 0, 0.3);
         padding: 20px;
-        z-index: 1000;
+        z-index: 1001;
         transform: translateX(100%);
     }
     .sidebar.active {
         transform: translateX(0);
     }
+    .mobile-back-button {
+        display: block;
+    }
 }
 
-
-
+li {
+    margin-bottom: 3px;}
