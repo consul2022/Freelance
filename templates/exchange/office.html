@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Личный кабинет</title>
+  <link rel="stylesheet" href="{% static 'exchange/css/office.css' %}">
+  <script defer src="{% static 'exchange/js/office.js' %}"></script>
+</head>
+<body>
+  <div class="container">
+    <header class="office-header">
+      <h1>Личный кабинет</h1>
+      <!-- Кнопка перехода на страницу создания заказа -->
+      <button class="create-order-button" onclick="window.location.href='/create_order/'">
+        Создать заказ
+      </button>
+    </header>
+    <main class="orders-container">
+      <h2>Ваши заказы</h2>
+      <!-- Список заказов, который будет заполнен динамически -->
+      <div id="orders-list" class="orders-list"></div>
+    </main>
+  </div>
+</body>
+</html>
