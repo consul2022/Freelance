@@ -20,7 +20,7 @@
         <div class="mobile-back-button" onclick="toggleFilters()">
             &larr;
         </div>
-        <h3>сферы деятельности</h3>
+        <h3>Cферы деятельности</h3>
         <ul class="filters">
             {% for category, subcats in subactivities.items %}
             <li class="category">
@@ -48,7 +48,7 @@
     <div class="sidebar-overlay" onclick="toggleFilters()"></div>
     <!-- Основная секция заказов -->
     <main class="orders-container">
-        <h2>заказы ({{ orders|length }})</h2>
+        <h2>Заказы ({{ orders|length }})</h2>
         <input type="text" id="search" placeholder="поиск заказов...">
         <div class="orders-list">
             {% for order in orders %}

@@ -29,12 +29,13 @@ def save_response(request,id):
     id = int(id)
     order = Order.objects.get(id=id)
     response_message = request.POST.get("response_message")
-    print(response_message)
     tg_id = int(request.POST.get("user_id"))
-    print(tg_id)
     user = User.objects.get(tg_id = tg_id)
     response = Response(order=order, user=user, message=response_message)
     response.save()
     return redirect("show_orders", id=id)
 
+
+def create_office(request):
+    return render(request, "exchange/office.html")
 
