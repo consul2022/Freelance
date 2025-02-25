@@ -9,68 +9,70 @@
     <script defer src="{% static 'exchange/js/orders.js' %}"></script>
 </head>
 <body>
-    <!-- Кнопка для открытия фильтров размещена вверху -->
-    <div class="top-bar">
-        <div class="mobile-filter-button" onclick="toggleFilters()">фильтры</div>
-    </div>
-    <div class="container">
-        <!-- Сайдбар с фильтрами -->
-        <aside class="sidebar">
-            <!-- Кнопка возврата для мобильной версии -->
-            <div class="mobile-back-button" onclick="toggleFilters()">
-                &larr;
-            </div>
-            <h3>сферы деятельности</h3>
-            <ul class="filters">
-                {% for category, subcats in subactivities.items %}
-                    <li class="category">
-                        <div class="category-header">
-                            <label class="category-label" onclick="toggleSubcategories(this)">
-                                <input type="checkbox" class="category-checkbox" data-category="{{ category.value }}">
-                                {{ category.label }}
-                            </label>
-                        </div>
-                        <ul class="subcategories">
-                            {% for subcat in subcats %}
-                                <li>
-                                    <label>
-                                        <input type="checkbox" class="subcategory-checkbox" data-subcategory="{{ subcat.0 }}">
-                                        {{ subcat.1 }}
-                                    </label>
-                                </li>
-                            {% endfor %}
-                        </ul>
+<!-- Кнопка для открытия фильтров размещена вверху -->
+<div class="top-bar">
+    <div class="mobile-filter-button" onclick="toggleFilters()">фильтры</div>
+</div>
+<div class="container">
+    <!-- Сайдбар с фильтрами -->
+    <aside class="sidebar">
+        <!-- Кнопка возврата для мобильной версии -->
+        <div class="mobile-back-button" onclick="toggleFilters()">
+            &larr;
+        </div>
+        <h3>сферы деятельности</h3>
+        <ul class="filters">
+            {% for category, subcats in subactivities.items %}
+            <li class="category">
+                <div class="category-header">
+                    <label class="category-label" onclick="toggleSubcategories(this)">
+                        <input type="checkbox" class="category-checkbox" data-category="{{ category.value }}">
+                        {{ category.label }}
+                    </label>
+                </div>
+                <ul class="subcategories">
+                    {% for subcat in subcats %}
+                    <li>
+                        <label>
+                            <input type="checkbox" class="subcategory-checkbox" data-subcategory="{{ subcat.0 }}">
+                            {{ subcat.1 }}
+                        </label>
                     </li>
-                {% endfor %}
-            </ul>
-        </aside>
-        <!-- Оверлей для закрытия боковой панели при клике вне фильтров (только мобильная версия) -->
-        <div class="sidebar-overlay" onclick="toggleFilters()"></div>
-        <!-- Основная секция заказов -->
-        <main class="orders-container">
-            <h2>заказы ({{ orders|length }})</h2>
-            <input type="text" id="search" placeholder="поиск заказов...">
-            <div class="orders-list">
-                {% for order in orders %}
-                    <div class="order-card" data-category="{{ order.activity }}" data-subcategory="{{ order.subactivity }}">
-                        <div class="order-header">
-                            <h3>{{ order.name }}</h3>
-                            <span class="order-price">{{ order.price|floatformat:0 }} руб.</span>
-                        </div>
-                        <p class="order-description">{{ order.description|truncatechars:100 }}</p>
-                        <div class="order-meta">
-                            <span class="order-responses">откликов: {{ order.response_set.count }}</span>
-                            <span class="order-time">{{ order.created_at|timesince }} назад</span>
-                        </div>
-                        <div class="tags">
-                            {% for tag in order.tags.all %}
-                                <span class="tag">{{ tag.name }}</span>
-                            {% endfor %}
-                        </div>
+                    {% endfor %}
+                </ul>
+            </li>
+            {% endfor %}
+        </ul>
+    </aside>
+    <!-- Оверлей для закрытия боковой панели при клике вне фильтров (только мобильная версия) -->
+    <div class="sidebar-overlay" onclick="toggleFilters()"></div>
+    <!-- Основная секция заказов -->
+    <main class="orders-container">
+        <h2>заказы ({{ orders|length }})</h2>
+        <input type="text" id="search" placeholder="поиск заказов...">
+        <div class="orders-list">
+            {% for order in orders %}
+            <a href="{% url 'show_orders' order.id %}">
+                <div class="order-card" data-category="{{ order.activity }}" data-subcategory="{{ order.subactivity }}">
+                    <div class="order-header">
+                        <h3>{{ order.name }}</h3>
+                        <span class="order-price">{{ order.price|floatformat:0 }} руб.</span>
                     </div>
-                {% endfor %}
-            </div>
-        </main>
-    </div>
+                    <p class="order-description">{{ order.description|truncatechars:100 }}</p>
+                    <div class="order-meta">
+                        <span class="order-responses">откликов: {{ order.response_set.count }}</span>
+                        <span class="order-time">{{ order.created_at|timesince }} назад</span>
+                    </div>
+                    <div class="tags">
+                        {% for tag in order.tags.all %}
+                        <span class="tag">{{ tag.name }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </main>
+</div>
 </body>
 </html>

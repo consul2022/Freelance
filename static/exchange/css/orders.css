@@ -237,4 +237,10 @@ display: block;
 }
 
 li {
-    margin-bottom: 3px;}
+    margin-bottom: 3px;
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}

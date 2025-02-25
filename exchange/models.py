@@ -141,6 +141,9 @@ class Order(models.Model):
         choices=[],
         blank=True
     )
+    @property
+    def response(self):
+        return self.response_set.count()
 
     def save(self, *args, **kwargs):
         if self.activity in SUBACTIVITIES:

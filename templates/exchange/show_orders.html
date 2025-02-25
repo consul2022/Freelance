@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали заказа</title>
+    <link rel="stylesheet" href="{% static 'exchange/css/show_orders.css' %}">
+    <script defer src="{% static 'exchange/js/show_orders.js' %}"></script>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+    <!-- Верхняя панель с кнопкой "Назад" для возврата к списку заказов -->
+    <div class="top-bar">
+        <a href="{% url 'orders_list' %}" class="back-button">&larr; Назад</a>
+    </div>
+    <div class="container">
+        <!-- Карточка с информацией о заказе -->
+        <div class="order-detail-card">
+<!--            <h2 class="order-title">{{ order.name }}</h2>-->
+<!--            <div class="order-info">-->
+<!--                <span class="order-price">{{ order.price|floatformat:0 }} руб.</span>-->
+<!--                <span class="order-time">{{ order.created_at|timesince }} назад</span>-->
+<!--            </div>-->
+<!--            <div class="order-meta">-->
+<!--                <span class="order-responses">Откликов: {{ order.response_set.count }}</span>-->
+<!--                <span class="order-views">Просмотров: {{ order.views }}</span>-->
+<!--            </div>-->
+<!--            <div class="order-tags">-->
+<!--                {% for tag in order.tags.all %}-->
+<!--                    <span class="tag">{{ tag.name }}</span>-->
+<!--                {% endfor %}-->
+<!--            </div>-->
+            <div class="order-header">
+                <h3>{{ order.name }}</h3>
+                <span class="order-price">{{ order.price|floatformat:0 }} руб.</span>
+            </div>
+            <div class="order-meta">
+                <span class="order-responses">откликов: {{ order.response_set.count }}</span>
+                <span class="order-time">{{ order.created_at|timesince }} назад</span>
+            </div>
+            <p class="order-views">просмотров: {{ order.views }}</p>
+            <div class="tags">
+                {% for tag in order.tags.all %}
+                <span class="tag">{{ tag.name }}</span>
+                {% endfor %}
+            </div>
+            <div class="order-description">
+                <p>{{ order.description }}</p>
+            </div>
+        </div>
+
+        <!-- Форма для оставления отклика -->
+        <div class="response-section">
+            <h3>Оставить отклик</h3>
+            <form id="responseForm" method="post" action="{% url 'save_response' order.id %}">
+                {% csrf_token %}
+                <textarea id="responseText" name="response_message" placeholder="Ваш отклик..." required></textarea>
+                <button type="submit">Отправить</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
