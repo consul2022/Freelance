@@ -29,17 +29,20 @@ document.addEventListener("DOMContentLoaded", function() {
         const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
         const csrftoken = getCookie('csrftoken')
+        const formData = new URLSearchParams();
+        formData.append('response_message', response_message);
+        formData.append('user_id', user_id);
+        
         fetch(responseForm.action, {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
                 "X-CSRFToken": csrfToken
             },
-            body: { response_message: response_message, user_id : user_id}
+            body: formData.toString(),
             credentials: "include"
         })
         .then(response => {
-            // Если сервер выполняет редирект, переходим по новому URL
             if (response.redirected) {
                 window.location.href = response.url;
             } else {
@@ -47,7 +50,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         })
         .then(data => {
-            // Если дополнительная обработка необходима
             alert("Отклик успешно отправлен!");
             responseForm.reset();
         })
