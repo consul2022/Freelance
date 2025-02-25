@@ -1,0 +1,155 @@
+/* Общие стили */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #1e1e2e;
+  color: #e0e0e0;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Заголовок кабинета */
+.office-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.office-header h1 {
+  font-size: 2rem;
+  color: #9C78FF;
+}
+
+/* Кнопка создания заказа */
+.create-order-button {
+  background: #9C78FF;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.create-order-button:hover {
+  background: #7a5ccc;
+}
+
+/* Основная секция заказов */
+.orders-container {
+  background: #252532;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.orders-container h2 {
+  font-size: 1.4rem;
+  color: #9C78FF;
+  margin-bottom: 15px;
+}
+
+/* Список заказов */
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Карточка заказа */
+.order-card {
+  background: #2e2e3f;
+  padding: 20px;
+  border-radius: 10px;
+  position: relative;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.order-card:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 15px rgba(156, 120, 255, 0.4);
+}
+
+/* Заголовок заказа */
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.order-header h3 {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #ffffff;
+  margin: 0;
+}
+
+.order-price {
+  font-size: 1.1rem;
+  color: #9C78FF;
+  font-weight: bold;
+}
+
+/* Описание заказа */
+.order-description {
+  font-size: 0.95rem;
+  color: #bbb;
+  margin: 5px 0 10px;
+}
+
+/* Метаданные заказа */
+.order-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+
+/* Теги */
+.tags {
+  margin-top: 10px;
+}
+
+.tags .tag {
+  display: inline-block;
+  background: #9C78FF;
+  color: #ffffff;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  margin-right: 5px;
+}
+
+/* Кнопки действий (редактировать/удалить) */
+.order-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 5px;
+}
+
+.order-actions button {
+  background: transparent;
+  border: 1px solid #9C78FF;
+  color: #9C78FF;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+  font-size: 0.8rem;
+}
+
+.order-actions button:hover {
+  background: #9C78FF;
+  color: #ffffff;
+}
