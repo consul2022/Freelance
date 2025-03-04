@@ -11,5 +11,5 @@ urlpatterns = [
     path('office/', create_office, name='create_office'),
     path('user/orders/<int:tg_id>/', user_orders, name='user_orders'),
     path('order/create/', create_order, name='create_order'),
-    path('user/orders/<int:order_id>/', delete_order, name='delete_order')
+    path('user/orders/delete/<int:order_id>/', delete_order, name='delete_order'),
 ]

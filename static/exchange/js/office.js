@@ -80,7 +80,7 @@ function editOrder(orderId) {
 function deleteOrder(orderId) {
   if (confirm('Вы уверены, что хотите удалить этот заказ?')) {
     const csrftoken = getCookie('csrftoken');
-    fetch(`/exchange/user/orders/${orderId}/`, { method: 'DELETE', headers: {
+    fetch(`/exchange/user/orders/delete/${orderId}/`, { method: 'DELETE', headers: {
                 "Content-Type": "application/json",
                 "X-CSRFToken": csrftoken
             },credentials: "include"})

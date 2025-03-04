@@ -87,6 +87,9 @@ def create_order(request):
         return redirect("user_orders")
 
 def delete_order(request, order_id):
-    order = get_object_or_404(Order, id=order_id)
-    order.delete()
-    return JsonResponse({"orders": order}, safe=False)
+    if request.method == "DELETE":
+        order = Order.objects.get(id=order_id)
+        order.delete()
+        return JsonResponse({"result": "Заказ удален"}, safe=False)
+
+

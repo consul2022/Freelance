@@ -9,11 +9,12 @@
   <script defer src="{% static 'exchange/js/office.js' %}"></script>
 </head>
 <body>
+{% csrf_token %}
   <div class="container">
     <header class="office-header">
       <h1>Личный кабинет</h1>
       <!-- Кнопка перехода на страницу создания заказа -->
-      <button class="create-order-button" onclick="window.location.href='/exchange/order/create/  '">
+      <button class="create-order-button" onclick="window.location.href='/exchange/order/create/'">
         Создать заказ
       </button>
     </header>
