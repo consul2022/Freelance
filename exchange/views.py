@@ -1,6 +1,7 @@
 from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from exchange.models import SUBACTIVITIES, Order, Response, User, Tags
 
@@ -38,7 +39,7 @@ def save_response(request, id):
     response.save()
     return redirect("show_orders", id=id)
 
-
+@ensure_csrf_cookie
 def create_office(request):
     return render(request, "exchange/office.html")
 
