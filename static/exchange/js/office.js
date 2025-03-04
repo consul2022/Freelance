@@ -1,5 +1,22 @@
 // Задайте tg_id пользователя (например, полученный из авторизации)
-const tg_id = 123456789;
+const tg_id = 1357975325;
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Проверяем, начинается ли строка cookie с "name="
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
   fetchOrders();
@@ -7,10 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Получение заказов по tg_id
 function fetchOrders() {
-  fetch(`/user/orders/${tg_id}/`)
+  fetch(`/exchange/user/orders/${tg_id}/`)
     .then(response => response.json())
     .then(data => {
-      renderOrders(data);
+      renderOrders(data.orders);
     })
     .catch(error => {
       console.error('Ошибка при получении заказов:', error);
@@ -25,6 +42,9 @@ function renderOrders(orders) {
     ordersList.innerHTML = '<p>Заказы не найдены.</p>';
     return;
   }
+  const truncate = (str, num) => {
+    return str.length > num ? str.slice(0, num) + "..." : str;
+};
   orders.forEach(order => {
     const orderCard = document.createElement('div');
     orderCard.className = 'order-card';
@@ -34,7 +54,7 @@ function renderOrders(orders) {
         <h3>${order.name}</h3>
         <span class="order-price">${parseFloat(order.price).toFixed(0)} руб.</span>
       </div>
-      <p class="order-description">${order.description}</p>
+      <p class="order-description">${truncate(order.description, 100)}</p>
       <div class="order-meta">
         <span class="order-responses">откликов: ${order.response_count || 0}</span>
         <span class="order-time">${order.created_at}</span>
@@ -53,13 +73,17 @@ function renderOrders(orders) {
 
 // Редактирование заказа – перенаправление на страницу редактирования
 function editOrder(orderId) {
-  window.location.href = `/edit_order/${orderId}/`;
+  window.location.href = `/exchange/order/edit/${orderId}/`;
 }
 
 // Удаление заказа
 function deleteOrder(orderId) {
   if (confirm('Вы уверены, что хотите удалить этот заказ?')) {
-    fetch(`/user/orders/${orderId}/`, { method: 'DELETE' })
+    const csrftoken = getCookie('csrftoken');
+    fetch(`/exchange/user/orders/${orderId}/`, { method: 'DELETE', headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": csrftoken
+            },credentials: "include"})
       .then(response => {
         if (response.ok) {
           fetchOrders(); // Обновление списка заказов после удаления

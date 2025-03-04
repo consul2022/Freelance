@@ -1,0 +1,52 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Создать заказ</title>
+  <link rel="stylesheet" href="{% static 'exchange/css/create_order.css' %}">
+</head>
+<body>
+  <div class="container">
+    <header class="form-header">
+      <h1>Создать заказ</h1>
+    </header>
+    <form id="create-order-form" action="/user/orders/create/" method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="name">Название заказа</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Описание</label>
+        <textarea id="description" name="description" rows="4" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="price">Цена (руб.)</label>
+        <input type="number" id="price" name="price" step="0.01" required>
+      </div>
+      <div class="form-group">
+        <label for="activity">Сфера деятельности</label>
+        <select id="activity" name="activity" required>
+          <option value="development">Разработка</option>
+          <option value="testing">Тестирование</option>
+          <option value="administration">Администрирование</option>
+          <option value="design">Дизайн</option>
+          <option value="content">Контент</option>
+          <option value="marketing">Маркетинг</option>
+          <option value="other">Разное</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="subactivity">Подсфера деятельности</label>
+        <select id="subactivity" name="subactivity" required>
+          <!-- В зависимости от выбранной сферы сюда будут загружаться подкатегории -->
+        </select>
+      </div>
+      <button type="submit" class="submit-button">Создать заказ</button>
+    </form>
+  </div>
+  <script src="{% static 'exchange/js/create_order.js' %}"></script>
+</body>
+</html>
