@@ -51,11 +51,13 @@
         <label>Выберите теги</label>
         <div id="tags-container">
           {% for tag in tags %}
-          <span class="tag" data-value="{{ tag }}" {% if tag in order_tags %}class="active"{% endif %}>{{ tag }}</span>
+            <span class="tag {% if tag in order.tags.all %}active{% endif %}" data-value="{{ tag.name }}">
+              {{ tag.name }}
+            </span>
           {% endfor %}
         </div>
-        <!-- Скрытое поле для передачи выбранных тегов -->
-        <input type="hidden" name="tags" id="tags-input" value="{{ order.tags|default_if_none:'' }}">
+        <!-- Скрытое поле для передачи выбранных тегов (список имен тегов через запятую) -->
+        <input type="hidden" name="tags" id="tags-input" value="{% for tag in order.tags.all %}{{ tag.name }}{% if not forloop.last %},{% endif %}{% endfor %}">
       </div>
       
       <button type="submit" class="submit-button">Сохранить изменения</button>
