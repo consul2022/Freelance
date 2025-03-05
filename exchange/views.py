@@ -39,6 +39,7 @@ def save_response(request, id):
     response.save()
     return redirect("show_orders", id=id)
 
+
 @ensure_csrf_cookie
 def create_office(request):
     return render(request, "exchange/office.html")
@@ -61,6 +62,7 @@ def user_orders(request, tg_id):
     ]
     return JsonResponse({"orders": orders_data}, safe=False)
 
+
 def create_order(request):
     if request.method == "GET":
         tags = Tags.objects.all()
@@ -68,23 +70,27 @@ def create_order(request):
         context = {
             "tags": tags,
         }
-        return render(request, "exchange/create_order.html",context)
+        return render(request, "exchange/create_order.html", context)
     if request.method == "POST":
         tg_id = int(request.POST.get("user_id"))
         user = get_object_or_404(User, tg_id=tg_id)
         name = request.POST.get("name")
         price = float(request.POST.get("price"))
         description = request.POST.get("description")
-        tags = request.POST.getlist("tags")
+        activity = request.POST.get("activity")
+        subactivity = request.POST.get("subactivity")
+        # tags = request.POST.getlist("tags")
 
-        order = Order(name=name, price=price, description=description, user=user)
+        order = Order(name=name, price=price, description=description, user=user, activity=activity,
+                      subactivity=subactivity)
         order.save()
 
-        for tag_name in tags:
-            tag = get_object_or_404(Tags, name=tag_name)
-            order.tags.add(tag)
+        # for tag_name in tags:
+        #     tag = get_object_or_404(Tags, name=tag_name)
+        #     order.tags.add(tag)
 
-        return redirect("user_orders")
+        return redirect("create_office")
+
 
 def delete_order(request, order_id):
     if request.method == "DELETE":
@@ -93,3 +99,11 @@ def delete_order(request, order_id):
         return JsonResponse({"result": "Заказ удален"}, safe=False)
 
 
+def order_activities(request):
+    data = {}
+    for activity, subactivities in SUBACTIVITIES.items():
+        data[activity] = {
+            "name": activity,
+            "subactivities": [{"label": subactivity[0], "name": subactivity[1]} for subactivity in subactivities],
+        }
+    return JsonResponse(data, safe=False)

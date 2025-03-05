@@ -1,4 +1,4 @@
-```js
+let user_id = 1357975325
 // Объект с подкатегориями для каждой сферы деятельности
 const subactivities = {
   "development": [
@@ -84,12 +84,65 @@ document.addEventListener('DOMContentLoaded', () => {
   const activitySelect = document.getElementById('activity');
   const subactivitySelect = document.getElementById('subactivity');
 
+  const responseForm = document.getElementById("create-order-form");
+  const nameText = document.getElementById("name");
+  const descriptionText  = document.getElementById("description");
+  const priceText  = document.getElementById("price");
+  const activityText  = document.getElementById("activity");
+  const subactivityText  = document.getElementById("subactivity");
+
   // Инициализация подкатегорий для выбранной сферы
   loadSubactivities(activitySelect.value);
 
   activitySelect.addEventListener('change', function() {
     loadSubactivities(this.value);
   });
+
+
+    responseForm.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const name = nameText.value.trim();
+        const description = descriptionText.value.trim();
+        const price = priceText.value.trim();
+        const activity = activityText.value.trim();
+        const subactivity = subactivityText.value.trim();
+
+        // Получаем CSRF-токен для защиты POST-запроса
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        const formData = new URLSearchParams();
+        formData.append('user_id', user_id);
+        formData.append('name', name);
+        formData.append('description', description);
+        formData.append('price', price);
+        formData.append('activity', activity);
+        formData.append('subactivity', subactivity);
+
+        fetch(responseForm.action, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": csrfToken
+            },
+            body: formData.toString(),
+            credentials: "include"
+        })
+        .then(response => {
+            if (response.redirected) {
+                window.location.href = response.url;
+            } else {
+                return response.text();
+            }
+        })
+        .then(data => {
+            alert("Заказ создан успешно!");
+            responseForm.reset();
+        })
+        .catch(error => {
+            console.error("Ошибка при создании заказа:", error);
+            alert("Произошла ошибка при создании заказа. Попробуйте еще раз.");
+        });
+    });
 });
 
 // Функция загрузки подкатегорий по выбранной сфере
@@ -105,4 +158,3 @@ function loadSubactivities(activity) {
     });
   }
 }
-`
