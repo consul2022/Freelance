@@ -79,15 +79,16 @@ def create_order(request):
         description = request.POST.get("description")
         activity = request.POST.get("activity")
         subactivity = request.POST.get("subactivity")
-        # tags = request.POST.getlist("tags")
+        tags = request.POST.get("tags").split(",")
+        print(tags)
 
         order = Order(name=name, price=price, description=description, user=user, activity=activity,
                       subactivity=subactivity)
         order.save()
-
-        # for tag_name in tags:
-        #     tag = get_object_or_404(Tags, name=tag_name)
-        #     order.tags.add(tag)
+        for tag_name in tags:
+            tag = get_object_or_404(Tags, name=tag_name)
+            order.tags.add(tag)
+        order.save()
 
         return redirect("create_office")
 

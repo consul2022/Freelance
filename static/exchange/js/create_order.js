@@ -127,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const activity = activityText.value.trim();
     const subactivity = subactivityText.value.trim();
     const tags = tagsInput.value; // выбранные теги
+    console.log(tags)
 
     // Получаем CSRF-токен для защиты POST-запроса
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
@@ -138,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
     formData.append('price', price);
     formData.append('activity', activity);
     formData.append('subactivity', subactivity);
-    formData.append('tag', tags);
+    formData.append('tags', tags);
 
     fetch(responseForm.action, {
       method: "POST",
