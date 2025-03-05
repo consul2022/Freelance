@@ -1,4 +1,5 @@
-let user_id = 1357975325
+let user_id = 1357975325;
+
 // Объект с подкатегориями для каждой сферы деятельности
 const subactivities = {
   "development": [
@@ -80,6 +81,7 @@ const subactivities = {
     { value: "other_other", label: "Разное" }
   ]
 };
+
 document.addEventListener('DOMContentLoaded', () => {
   const activitySelect = document.getElementById('activity');
   const subactivitySelect = document.getElementById('subactivity');
@@ -97,52 +99,75 @@ document.addEventListener('DOMContentLoaded', () => {
   activitySelect.addEventListener('change', function() {
     loadSubactivities(this.value);
   });
-
-
-    responseForm.addEventListener("submit", function(e) {
-        e.preventDefault();
-        const name = nameText.value.trim();
-        const description = descriptionText.value.trim();
-        const price = priceText.value.trim();
-        const activity = activityText.value.trim();
-        const subactivity = subactivityText.value.trim();
-
-        // Получаем CSRF-токен для защиты POST-запроса
-        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-
-        const formData = new URLSearchParams();
-        formData.append('user_id', user_id);
-        formData.append('name', name);
-        formData.append('description', description);
-        formData.append('price', price);
-        formData.append('activity', activity);
-        formData.append('subactivity', subactivity);
-
-        fetch(responseForm.action, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "X-CSRFToken": csrfToken
-            },
-            body: formData.toString(),
-            credentials: "include"
-        })
-        .then(response => {
-            if (response.redirected) {
-                window.location.href = response.url;
-            } else {
-                return response.text();
-            }
-        })
-        .then(data => {
-            alert("Заказ создан успешно!");
-            responseForm.reset();
-        })
-        .catch(error => {
-            console.error("Ошибка при создании заказа:", error);
-            alert("Произошла ошибка при создании заказа. Попробуйте еще раз.");
-        });
+  
+  // Логика выбора тегов
+  const tagsContainer = document.getElementById('tags-container');
+  const tagsInput = document.getElementById('tags-input');
+  
+  // Назначаем обработчик клика для каждого тега
+  tagsContainer.querySelectorAll('.tag').forEach(tagEl => {
+    tagEl.addEventListener('click', function() {
+      this.classList.toggle('active');
+      updateTagsInput();
     });
+  });
+
+  // Функция обновления скрытого поля со списком выбранных тегов
+  function updateTagsInput() {
+    const selectedTags = Array.from(tagsContainer.querySelectorAll('.tag.active'))
+      .map(el => el.getAttribute('data-value'));
+    tagsInput.value = selectedTags.join(',');
+  }
+
+  responseForm.addEventListener("submit", function(e) {
+    e.preventDefault();
+    const name = nameText.value.trim();
+    const description = descriptionText.value.trim();
+    const price = priceText.value.trim();
+    const activity = activityText.value.trim();
+    const subactivity = subactivityText.value.trim();
+    const tags = tagsInput.value; // выбранные теги
+
+    // Получаем CSRF-токен для защиты POST-запроса
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    const formData = new URLSearchParams();
+    formData.append('user_id', user_id);
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('price', price);
+    formData.append('activity', activity);
+    formData.append('subactivity', subactivity);
+    formData.append('tag', tags);
+
+    fetch(responseForm.action, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-CSRFToken": csrfToken
+      },
+      body: formData.toString(),
+      credentials: "include"
+    })
+    .then(response => {
+      if (response.redirected) {
+        window.location.href = response.url;
+      } else {
+        return response.text();
+      }
+    })
+    .then(data => {
+      alert("Заказ создан успешно!");
+      responseForm.reset();
+      // Сброс активных тегов после успешной отправки формы
+      tagsContainer.querySelectorAll('.tag.active').forEach(tagEl => tagEl.classList.remove('active'));
+      updateTagsInput();
+    })
+    .catch(error => {
+      console.error("Ошибка при создании заказа:", error);
+      alert("Произошла ошибка при создании заказа. Попробуйте еще раз.");
+    });
+  });
 });
 
 // Функция загрузки подкатегорий по выбранной сфере
