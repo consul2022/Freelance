@@ -68,7 +68,7 @@ body {
     margin: 0;
 }
 .subcategories.active {
-display: block;
+    display: block;
 }
 
 .sidebar h3 {
@@ -109,6 +109,25 @@ display: block;
     font-size: 1.4rem;
     color: #9C78FF;
     margin-bottom: 15px;
+}
+
+/* Контейнер заголовка заказов с иконкой */
+.orders-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.personal-cabinet img {
+    width: 32px; /* размер иконки */
+    height: 32px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.personal-cabinet img:hover {
+    transform: scale(1.05);
 }
 
 #search {
@@ -209,7 +228,6 @@ display: block;
     width: 150px;
 }
 
-
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
     .container {
@@ -242,12 +260,13 @@ li {
     margin-bottom: 3px;
 }
 
-a{
+a {
     text-decoration: none;
     color: inherit;
 }
+
 @media (min-width: 768px) {
-   .mobile-filter-button {
+    .mobile-filter-button {
         display: none;
     }
 }
