@@ -184,3 +184,7 @@ function loadSubactivities(activity) {
     });
   }
 }
+document.getElementById("back").addEventListener('click', function(event) {
+event.preventDefault();
+window.location.href = "/exchange/office"
+})

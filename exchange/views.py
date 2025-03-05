@@ -8,7 +8,7 @@ from exchange.models import SUBACTIVITIES, Order, Response, User, Tags
 
 # Create your views here.
 def orders_list(request):
-    orders = Order.objects.all().select_related("user").prefetch_related("tags")
+    orders = Order.objects.all().select_related("user").prefetch_related("tags").order_by("-created_at")
     subactivities = SUBACTIVITIES  # Данные для фильтрации
 
     context = {
@@ -47,7 +47,7 @@ def create_office(request):
 
 def user_orders(request, tg_id):
     user = get_object_or_404(User, tg_id=tg_id)
-    orders = Order.objects.filter(user=user).annotate(response_count=Count("response")).prefetch_related("tags")
+    orders = Order.objects.filter(user=user).annotate(response_count=Count("response")).prefetch_related("tags").order_by("-created_at")
     orders_data = [
         {
             "id": order.id,
@@ -111,4 +111,31 @@ def order_activities(request):
 
 
 def edit_order(request, order_id):
+    order = Order.objects.get(id=order_id)
+    if request.method == "GET":
+        tags = Tags.objects.all()
+        return render(request, "exchange/edit_order.html", {"order": order, "tags" : tags})
+
+    if request.method == "POST":
+        name = request.POST.get("name")
+        price = float(request.POST.get("price"))
+        description = request.POST.get("description")
+        activity = request.POST.get("activity")
+        subactivity = request.POST.get("subactivity")
+        tags = request.POST.get("tags").split(",")
+
+        order.name = name
+        order.price = price
+        order.description = description
+        order.activity = activity
+        order.subactivity = subactivity
+        order.save()
+
+        order.tags.clear()
+        for tag_name in tags:
+            tag = get_object_or_404(Tags, name=tag_name)
+            order.tags.add(tag)
+        order.save()
+
+        return redirect("create_office")
 

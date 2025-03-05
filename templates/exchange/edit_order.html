@@ -13,7 +13,7 @@
       <h1>Редактировать заказ</h1>
     </header>
     <!-- Предполагается, что URL edit_order принимает order.id -->
-    <form id="edit-order-form" action="{% url 'exchange:edit_order' order.id %}" method="POST">
+    <form id="edit-order-form" action="{% url 'edit_order' order.id %}" method="POST">
       {% csrf_token %}
       <div class="form-group">
         <label for="name">Название заказа</label>
@@ -61,6 +61,7 @@
       </div>
       
       <button type="submit" class="submit-button">Сохранить изменения</button>
+      <button type="submit" id="back" class="submit-button">Назад</button>
     </form>
   </div>
   
