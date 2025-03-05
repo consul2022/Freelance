@@ -44,6 +44,19 @@
           <!-- В зависимости от выбранной сферы сюда будут загружаться подкатегории -->
         </select>
       </div>
+      
+      <!-- Блок выбора тегов -->
+      <div class="form-group tags-group">
+        <label>Выберите теги</label>
+        <div id="tags-container">
+          {% for tag in tags %}
+          <span class="tag" data-value="{{ tag }}">{{ tag }}</span>
+          {% endfor %}
+        </div>
+        <!-- Скрытое поле для передачи выбранных тегов -->
+        <input type="hidden" name="tag" id="tags-input" value="">
+      </div>
+      
       <button type="submit" class="submit-button">Создать заказ</button>
     </form>
   </div>
