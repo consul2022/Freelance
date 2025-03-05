@@ -48,7 +48,12 @@
     <div class="sidebar-overlay" onclick="toggleFilters()"></div>
     <!-- Основная секция заказов -->
     <main class="orders-container">
-        <h2>Заказы ({{ orders|length }})</h2>
+        <div class="orders-header">
+            <h2>Заказы ({{ orders|length }})</h2>
+            <a href="/exchange/office/" class="personal-cabinet">
+                <img src="{% static 'exchange/image/user_icon.png' %}" alt="Личный кабинет">
+            </a>
+        </div>
         <input type="text" id="search" placeholder="поиск заказов...">
         <div class="orders-list">
             {% for order in orders %}
