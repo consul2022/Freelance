@@ -1,0 +1,71 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Редактировать заказ</title>
+  <link rel="stylesheet" href="{% static 'exchange/css/edit_order.css' %}">
+</head>
+<body>
+  <div class="container">
+    <header class="form-header">
+      <h1>Редактировать заказ</h1>
+    </header>
+    <!-- Предполагается, что URL edit_order принимает order.id -->
+    <form id="edit-order-form" action="{% url 'exchange:edit_order' order.id %}" method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="name">Название заказа</label>
+        <input type="text" id="name" name="name" value="{{ order.name }}" required>
+      </div>
+      <div class="form-group">
+        <label for="description">Описание</label>
+        <textarea id="description" name="description" rows="4" required>{{ order.description }}</textarea>
+      </div>
+      <div class="form-group">
+        <label for="price">Цена (руб.)</label>
+        <input type="number" id="price" name="price" step="0.01" value="{{ order.price }}" required>
+      </div>
+      <div class="form-group">
+        <label for="activity">Сфера деятельности</label>
+        <select id="activity" name="activity" required>
+          <option value="development" {% if order.activity == 'development' %}selected{% endif %}>Разработка</option>
+          <option value="testing" {% if order.activity == 'testing' %}selected{% endif %}>Тестирование</option>
+          <option value="administration" {% if order.activity == 'administration' %}selected{% endif %}>Администрирование</option>
+          <option value="design" {% if order.activity == 'design' %}selected{% endif %}>Дизайн</option>
+          <option value="content" {% if order.activity == 'content' %}selected{% endif %}>Контент</option>
+          <option value="marketing" {% if order.activity == 'marketing' %}selected{% endif %}>Маркетинг</option>
+          <option value="other" {% if order.activity == 'other' %}selected{% endif %}>Разное</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="subactivity">Подсфера деятельности</label>
+        <select id="subactivity" name="subactivity" required>
+          <!-- Подкатегории будут загружаться через JS -->
+        </select>
+      </div>
+      
+      <!-- Блок выбора тегов -->
+      <div class="form-group tags-group">
+        <label>Выберите теги</label>
+        <div id="tags-container">
+          {% for tag in tags %}
+          <span class="tag" data-value="{{ tag }}" {% if tag in order_tags %}class="active"{% endif %}>{{ tag }}</span>
+          {% endfor %}
+        </div>
+        <!-- Скрытое поле для передачи выбранных тегов -->
+        <input type="hidden" name="tags" id="tags-input" value="{{ order.tags|default_if_none:'' }}">
+      </div>
+      
+      <button type="submit" class="submit-button">Сохранить изменения</button>
+    </form>
+  </div>
+  
+  <!-- Перед подключением скрипта передаём значение текущей подсферы в JS -->
+  <script>
+    var initialSubactivity = "{{ order.subactivity }}";
+  </script>
+  <script src="{% static 'exchange/js/edit_order.js' %}"></script>
+</body>
+</html>
