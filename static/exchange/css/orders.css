@@ -120,8 +120,8 @@ body {
 }
 
 .personal-cabinet img {
-    width: 32px; /* размер иконки */
-    height: 32px;
+    width: 48px; /* размер иконки */
+    height: 48px;
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
 }
