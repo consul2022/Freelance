@@ -108,3 +108,7 @@ def order_activities(request):
             "subactivities": [{"label": subactivity[0], "name": subactivity[1]} for subactivity in subactivities],
         }
     return JsonResponse(data, safe=False)
+
+
+def edit_order(request, order_id):
+
