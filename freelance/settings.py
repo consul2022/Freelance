@@ -25,7 +25,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "innofreelance.ru"]
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'exchange',
+    'django_elasticsearch_dsl'
 ]
 
 MIDDLEWARE = [
@@ -103,7 +104,25 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+ELASTICSEARCH_DSL = {
+    # 'default': {
+    #     'hosts': 'http://localhost:9200',
+    # },
+    # 'doc_types': {
+    #     'user': {
+    #         'model': 'exchange.User',
+    #         'fields': ['id', 'username', 'tg_id', 'email', 'is_staff', 'is_active'],
+    #     },
+    #     'order': {
+    #         'model': 'exchange.Order',
+    #         'fields': ['id', 'user', 'activity', 'tags', 'created_at'],
+    #     },
+    #     'response': {
+    #         'model': 'exchange.Response',
+    #         'fields': ['id', 'order', 'user', 'message', 'create_date'],
+    #     },
+    # },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -122,9 +141,35 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
-# STATIC_ROOT = os.path.join(STATIC_URL, 'staticfiles')
+#STATIC_ROOT = os.path.join(STATIC_URL, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'json': {
+            'format': '{"timestamp": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s", "module": "%(module)s"}',
+            'datefmt': "%Y-%m-%d %H:%M:%S",
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'django.log'),
+            'formatter': 'json',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    },
+}

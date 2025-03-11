@@ -1,3 +1,11 @@
+let user_id;
+try {
+    user_id = window.Telegram.WebApp.initDataUnsafe.user.id;
+} catch (e) {
+    console.error("Could not get user ID from Telegram Web App");
+    }
+
+
 // Объект с подкатегориями для каждой сферы деятельности
 const subactivities = {
   "development": [

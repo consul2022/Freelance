@@ -1,9 +1,24 @@
+import os
+
+import requests
 from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import ensure_csrf_cookie
+from dotenv import load_dotenv
 
 from exchange.models import SUBACTIVITIES, Order, Response, User, Tags
+
+load_dotenv()
+
+
+def sent_notifications(chat_id, text):
+    data = {
+        "chat_id": chat_id,
+        "text": text,
+        "parse_mode": "HTML"
+    }
+    requests.get(f"https://api.telegram.org/bot{os.getenv('BOT_TOKEN')}/sendMessage", params=data)
 
 
 # Create your views here.
@@ -29,6 +44,7 @@ def show_orders(request, id):
     return render(request, "exchange/show_orders.html", context)
 
 
+
 def save_response(request, id):
     id = int(id)
     order = Order.objects.get(id=id)
@@ -37,7 +53,11 @@ def save_response(request, id):
     user = User.objects.get(tg_id=tg_id)
     response = Response(order=order, user=user, message=response_message)
     response.save()
+    text = (f"Вы получили новый отклик к заказу <b>{order.name}<b> от <a href='tg://user?id={user.tg_id}>{user.first_name} {user.last_name}</a> с сообщением\n\n"
+            f"<i>{response_message}</i>")
+    sent_notifications(order.user.tg_id, text)
     return redirect("show_orders", id=id)
+
 
 
 @ensure_csrf_cookie
@@ -47,7 +67,8 @@ def create_office(request):
 
 def user_orders(request, tg_id):
     user = get_object_or_404(User, tg_id=tg_id)
-    orders = Order.objects.filter(user=user).annotate(response_count=Count("response")).prefetch_related("tags").order_by("-created_at")
+    orders = Order.objects.filter(user=user).annotate(response_count=Count("response")).prefetch_related(
+        "tags").order_by("-created_at")
     orders_data = [
         {
             "id": order.id,
@@ -90,7 +111,7 @@ def create_order(request):
             order.tags.add(tag)
         order.save()
 
-        return redirect("create_office")
+        return render(request, "exchange/office.html")
 
 
 def delete_order(request, order_id):
@@ -114,7 +135,7 @@ def edit_order(request, order_id):
     order = Order.objects.get(id=order_id)
     if request.method == "GET":
         tags = Tags.objects.all()
-        return render(request, "exchange/edit_order.html", {"order": order, "tags" : tags})
+        return render(request, "exchange/edit_order.html", {"order": order, "tags": tags})
 
     if request.method == "POST":
         name = request.POST.get("name")
@@ -138,4 +159,3 @@ def edit_order(request, order_id):
         order.save()
 
         return redirect("create_office")
-

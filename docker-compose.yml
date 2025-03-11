@@ -25,6 +25,62 @@ services:
     volumes:
       - pgdb_data:/var/lib/postgresql/data/
 
+  bot:
+    build:
+      context: ./bot
+    container_name: telegram_bot
+    restart: always
+    env_file:
+      - .env
+    depends_on:
+      - pgdb
+    command: [ "python", "inno_bot.py" ]
+
+#  elasticsearch:
+#    image: docker.elastic.co/elasticsearch/elasticsearch:8.16.5
+#    container_name: elasticsearch
+#    environment:
+#      - discovery.type=single-node
+#      - xpack.security.enabled=false
+#    ports:
+#      - 9200:9200
+#    volumes:
+#      - es_data:/usr/share/elasticsearch/data
+#    networks:
+#      - elk
+#
+#  kibana:
+#    image: docker.elastic.co/kibana/kibana:8.16.5
+#    container_name: kibana
+#    environment:
+#      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+#    ports:
+#      - 5601:5601
+#    depends_on:
+#      - elasticsearch
+#    networks:
+#      - elk
+#
+#  logstash:
+#    image: docker.elastic.co/logstash/logstash:8.16.5
+#    container_name: logstash
+#    volumes:
+#      - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+#      - ./logs:/app/logs
+#    ports:
+#      - 5044:5044
+#    depends_on:
+#      - elasticsearch
+#    networks:
+#      - elk
+
+
 
 volumes:
   pgdb_data:
+#  es_data:
+
+#networks:
+#  elk:
+#    driver: bridge
+

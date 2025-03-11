@@ -94,20 +94,11 @@ SUBACTIVITIES = {
 }
 
 
-class User(AbstractUser):
+class User(models.Model):
     tg_id = models.BigIntegerField(unique=True, null=False)
-
-    groups = models.ManyToManyField(
-        "auth.Group",
-        related_name="exchange_users",
-        blank=True
-    )
-
-    user_permissions = models.ManyToManyField(
-        "auth.Permission",
-        related_name="exchange_user_permissions",
-        blank=True
-    )
+    username = models.CharField(max_length=100, null=True)
+    first_name = models.CharField(null=True)
+    last_name = models.CharField(null=True)
 
     def __str__(self):
         return f"{self.username}"

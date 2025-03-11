@@ -5,22 +5,9 @@ from .models import User, Tags, Order, Response, Activity, SUBACTIVITIES
 
 
 @admin.register(User)
-class UserAdmin(BaseUserAdmin):
-    fieldsets = (
-        (None, {'fields': ('username', 'password', 'tg_id')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'email')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
-        ('Important dates', {'fields': ('last_login', 'date_joined')}),
-    )
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('username', 'tg_id', 'password1', 'password2'),
-        }),
-    )
-    list_display = ("id", "username", "tg_id", "email", "is_staff", "is_active")
-    search_fields = ("username", "tg_id", "email")
-    list_filter = ("is_staff", "is_active")
+class UserAdmin(admin.ModelAdmin):
+    list_display = ("id", "username", "tg_id", "first_name", "last_name")
+    search_fields = ("username", "tg_id")
     ordering = ("id",)
 
 

@@ -1,5 +1,12 @@
 // Задайте tg_id пользователя (например, полученный из авторизации)
-const tg_id = 1357975325;
+//const tg_id = 1357975325;
+let tg_id;
+try {
+    tg_id = window.Telegram.WebApp.initDataUnsafe.user.id;
+} catch (e) {
+    console.error("Could not get user ID from Telegram Web App");
+}
+
 
 function getCookie(name) {
     let cookieValue = null;
