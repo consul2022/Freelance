@@ -8,7 +8,7 @@ try {
     console.log(isDesktop());
     if (!isDesktop()) {
         document.body.style.marginTop = "90px";
-        document.querySelector(".slidebar").style.marginTop = "90px";
+        document.querySelector(".sidebar").style.marginTop = "90px";
         window.Telegram.WebApp.requestFullscreen();
     }
 
