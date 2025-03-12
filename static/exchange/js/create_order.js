@@ -14,7 +14,7 @@ try {
     }
 } catch (e) {
     console.error("Could not get user ID from Telegram Web App");
-
+}
 
 // Объект с подкатегориями для каждой сферы деятельности
 const subactivities = {
