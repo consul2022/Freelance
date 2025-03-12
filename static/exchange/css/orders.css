@@ -86,7 +86,7 @@ body {
 .category-label {
     display: block;
     padding: 8px 0;
-    font-size: 1.1rem;
+    font-size: 18px;
     cursor: pointer;
     text-decoration: none;
 }
@@ -94,6 +94,7 @@ body {
 /* Сдвиг списка подкатегорий немного вправо */
 .subcategories {
     margin-left: 10px;
+    font-size: 15px
 }
 
 /* Основная секция заказов */
@@ -239,10 +240,12 @@ body {
         top: 0;
         right: 0;
         width: 80%;
-        height: 100%;
+        height: 80%;
         background: #252532;
         box-shadow: -4px 0 8px rgba(0, 0, 0, 0.3);
         padding: 20px;
+        padding-bottom: 90px;
+        padding-top: 40px;
         z-index: 1001;
         transform: translateX(100%);
         overflow-y: auto;
