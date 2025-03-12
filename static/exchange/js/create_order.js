@@ -1,4 +1,3 @@
-//let user_id = 1357975325;
 let user_id;
 try {
     user_id = window.Telegram.WebApp.initDataUnsafe.user.id;
@@ -13,7 +12,7 @@ try {
         window.Telegram.WebApp.requestFullscreen();
     }
 } catch (e) {
-    console.error("Could not get user ID from Telegram Web App");
+    console.error("Could not get user ID from Telegram Web App " + e.message);
 }
 
 // Объект с подкатегориями для каждой сферы деятельности
