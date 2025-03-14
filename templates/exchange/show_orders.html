@@ -51,13 +51,16 @@
         </div>
 
         <!-- Форма для оставления отклика -->
-        <div class="response-section">
+        <div class="response-section" data-user-tg="{{ telegram_id }}">
             <h3>Оставить отклик</h3>
-            <form id="responseForm" method="post" action="{% url 'save_response' order.id %}">
-                {% csrf_token %}
-                <textarea id="responseText" name="response_message" placeholder="Ваш отклик..." required></textarea>
-                <button type="submit">Отправить</button>
-            </form>
+            <div id="response-container">
+                <!-- Здесь будет либо форма, либо текст отклика -->
+                <form id="responseForm" method="post" action="{% url 'save_response' order.id %}">
+                    {% csrf_token %}
+                    <textarea id="responseText" name="response_message" placeholder="Ваш отклик..." required></textarea>
+                    <button type="submit">Отправить</button>
+                </form>
+            </div>
         </div>
     </div>
 </body>
