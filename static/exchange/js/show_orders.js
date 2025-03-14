@@ -80,13 +80,22 @@ document.addEventListener("DOMContentLoaded", function() {
     fetch(`/user/responses/${tg_id}/`)
         .then(response => response.json())
         .then(data => {
-            // Ищем отклик с текущим order_id
-            const userResponse = data.find(item => item.order_id.toString() === order_id);
+            let responses = [];
+            // Если data уже массив, используем его
+            if (Array.isArray(data)) {
+                responses = data;
+            } else if (data.responses && Array.isArray(data.responses)) {
+                // Если объект содержит ключ responses, содержащий массив
+                responses = data.responses;
+            } else {
+                // Альтернативно: попробовать преобразовать объект в массив
+                responses = Object.values(data);
+            }
+
+            const userResponse = responses.find(item => item.order_id.toString() === order_id);
             if (userResponse) {
-                // Если отклик найден, заменяем форму на текст отклика
                 responseContainer.innerHTML = `<p class="sent-response">${userResponse.response_message}</p>`;
             }
-            // Если отклик не найден, форма остаётся для отправки нового отклика
         })
         .catch(error => {
             console.error("Ошибка при получении откликов пользователя:", error);
