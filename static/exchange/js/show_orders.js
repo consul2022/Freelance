@@ -35,6 +35,10 @@ function getCookie(name) {
 }
 
 document.addEventListener("DOMContentLoaded", function() {
+    // Извлекаем order_id из URL. Предполагается, что URL содержит order_id, например: /orders/123/...
+    const pathParts = window.location.pathname.split('/');
+    // Предполагаем, что order_id находится в одном из сегментов URL и является числом
+    const order_id = pathParts.find(part => /^\d+$/.test(part));
     const responseForm = document.getElementById("responseForm");
     const responseText = document.getElementById("responseText");
 
@@ -79,22 +83,26 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     fetch(`/user/responses/${tg_id}/`)
         .then(response => response.json())
-        .then(data => {
+       .then(data => {
             let responses = [];
-            // Если data уже массив, используем его
             if (Array.isArray(data)) {
                 responses = data;
             } else if (data.responses && Array.isArray(data.responses)) {
-                // Если объект содержит ключ responses, содержащий массив
                 responses = data.responses;
             } else {
-                // Альтернативно: попробовать преобразовать объект в массив
                 responses = Object.values(data);
             }
-
+            
+            // Ищем отклик с нужным order_id
             const userResponse = responses.find(item => item.order_id.toString() === order_id);
             if (userResponse) {
-                responseContainer.innerHTML = `<p class="sent-response">${userResponse.response_message}</p>`;
+                // Если отклик найден, делаем поле ввода readonly и блокируем кнопку отправки,
+                // а также подставляем текст отклика в textarea
+                responseText.value = userResponse.response_message;
+                responseText.readOnly = true;
+                if (submitButton) {
+                    submitButton.disabled = true;
+                }
             }
         })
         .catch(error => {
