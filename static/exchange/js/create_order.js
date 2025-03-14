@@ -84,7 +84,7 @@ const subactivities = {
 
 document.addEventListener('DOMContentLoaded', () => {
   user_id = window.Telegram.WebApp.initDataUnsafe.user.id;
-
+  try{
     function isDesktop() {
         const userAgent = navigator.userAgent.toLowerCase();
         return userAgent.includes("windows") || userAgent.includes("macintosh") || userAgent.includes("linux");
@@ -94,6 +94,10 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.marginTop = "90px";
         window.Telegram.WebApp.requestFullscreen();
     }
+   } catch(e){
+     console.error(e);
+     user_id=1357975325
+   }
   const activitySelect = document.getElementById('activity');
   const subactivitySelect = document.getElementById('subactivity');
 

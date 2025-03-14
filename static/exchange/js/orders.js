@@ -8,12 +8,13 @@ try {
     console.log(isDesktop());
     if (!isDesktop()) {
         document.body.style.marginTop = "90px";
-        document.querySelector(".sidebar").style.marginTop = "90px";
+        document.querySelector(".sidebar").style.paddingTop = "90px";
         window.Telegram.WebApp.requestFullscreen();
     }
 
 } catch (e) {
     console.error("Could not get user ID from Telegram Web App");
+     user_id=1357975325
 }
 
 

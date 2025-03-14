@@ -14,4 +14,5 @@ urlpatterns = [
     path('user/orders/delete/<int:order_id>/', delete_order, name='delete_order'),
     path('order/activities/', order_activities, name='order_activities'),
     path('order/edit/<int:order_id>/', edit_order, name='edit_order'),
+
 ]

@@ -1,3 +1,4 @@
+import logging
 import os
 
 import requests
@@ -44,7 +45,6 @@ def show_orders(request, id):
     return render(request, "exchange/show_orders.html", context)
 
 
-
 def save_response(request, id):
     id = int(id)
     order = Order.objects.get(id=id)
@@ -53,11 +53,14 @@ def save_response(request, id):
     user = User.objects.get(tg_id=tg_id)
     response = Response(order=order, user=user, message=response_message)
     response.save()
-    text = (f"Вы получили новый отклик к заказу <b>{order.name}<b> от <a href='tg://user?id={user.tg_id}>{user.first_name} {user.last_name}</a> с сообщением\n\n"
-            f"<i>{response_message}</i>")
+    fio = ""
+    if user.first_name is not None:
+        fio += f"{user.first_name} "
+    if user.last_name is not None:
+        fio += f"{user.last_name}"
+    text = f"Вы получили новый отклик к заказу \"<b>{order.name}</b>\" от <a href='tg://user?id={user.tg_id}'>{fio.strip() if fio else 'пользователя'}</a> с сообщением\n\n<i>{response_message}</i>"
     sent_notifications(order.user.tg_id, text)
     return redirect("show_orders", id=id)
-
 
 
 @ensure_csrf_cookie

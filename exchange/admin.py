@@ -50,13 +50,8 @@ class OrderAdmin(admin.ModelAdmin):
 class ResponseAdmin(admin.ModelAdmin):
     list_display = ("id", "order", "user", "message", "create_date")
     search_fields = ("order__name", "user__username", "message")
-    list_filter = ("create_date",)
     ordering = ("-create_date",)
 
-    fieldsets = (
-        ("Основные данные", {"fields": ("order", "user", "message")}),
-        ("Дополнительная информация", {"fields": ("create_date",)}),
-    )
 
 
 # Автоматическое добавление подкатегорий при выборе категории
