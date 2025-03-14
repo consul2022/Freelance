@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const order_id = pathParts.find(part => /^\d+$/.test(part));
     const responseForm = document.getElementById("responseForm");
     const responseText = document.getElementById("responseText");
+    const submitButton = responseForm ? responseForm.querySelector("button") : null;
 
     responseForm.addEventListener("submit", function(e) {
         e.preventDefault();
@@ -98,7 +99,7 @@ document.addEventListener("DOMContentLoaded", function() {
             if (userResponse) {
                 // Если отклик найден, делаем поле ввода readonly и блокируем кнопку отправки,
                 // а также подставляем текст отклика в textarea
-                responseText.value = userResponse.response_message;
+                responseText.value = userResponse.message;
                 responseText.readOnly = true;
                 if (submitButton) {
                     submitButton.disabled = true;
