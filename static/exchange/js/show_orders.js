@@ -77,5 +77,19 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("Произошла ошибка при отправке отклика. Попробуйте еще раз.");
         });
     });
+    fetch(`/user/responses/${tg_id}/`)
+        .then(response => response.json())
+        .then(data => {
+            // Ищем отклик с текущим order_id
+            const userResponse = data.find(item => item.order_id.toString() === order_id);
+            if (userResponse) {
+                // Если отклик найден, заменяем форму на текст отклика
+                responseContainer.innerHTML = `<p class="sent-response">${userResponse.response_message}</p>`;
+            }
+            // Если отклик не найден, форма остаётся для отправки нового отклика
+        })
+        .catch(error => {
+            console.error("Ошибка при получении откликов пользователя:", error);
+        });
 });
 
