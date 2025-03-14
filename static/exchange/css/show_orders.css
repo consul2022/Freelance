@@ -145,6 +145,11 @@ font-size: 0.85rem;
     transition: background 0.2s ease-in-out;
 }
 
+.response-section button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
 .response-section button:hover {
     background: #8a68e0;
 }

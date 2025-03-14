@@ -83,8 +83,8 @@ const subactivities = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  user_id = window.Telegram.WebApp.initDataUnsafe.user.id;
   try{
+    user_id = window.Telegram.WebApp.initDataUnsafe.user.id;
     function isDesktop() {
         const userAgent = navigator.userAgent.toLowerCase();
         return userAgent.includes("windows") || userAgent.includes("macintosh") || userAgent.includes("linux");
@@ -96,7 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
    } catch(e){
      console.error(e);
-     user_id=1357975325
    }
   const activitySelect = document.getElementById('activity');
   const subactivitySelect = document.getElementById('subactivity');

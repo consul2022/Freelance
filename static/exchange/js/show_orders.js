@@ -14,7 +14,6 @@ try {
 
 } catch (e) {
     console.error("Could not get user ID from Telegram Web App");
-    user_id=1357975325
 }
 
 
@@ -82,7 +81,7 @@ document.addEventListener("DOMContentLoaded", function() {
             alert("Произошла ошибка при отправке отклика. Попробуйте еще раз.");
         });
     });
-    fetch(`/user/responses/${tg_id}/`)
+    fetch(`/exchange/user/responses/${user_id}/`)
         .then(response => response.json())
        .then(data => {
             let responses = [];

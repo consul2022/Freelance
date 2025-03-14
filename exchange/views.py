@@ -114,7 +114,7 @@ def create_order(request):
             order.tags.add(tag)
         order.save()
 
-        return render(request, "exchange/office.html")
+        return redirect("create_office")
 
 
 def delete_order(request, order_id):
@@ -162,3 +162,19 @@ def edit_order(request, order_id):
         order.save()
 
         return redirect("create_office")
+
+
+def user_response(request, tg_id):
+    user = get_object_or_404(User, tg_id=tg_id)
+    responses = Response.objects.filter(user=user).order_by("-create_date")
+    responses_data = [
+        {
+            "id": response.id,
+            "order_id": response.order.id,
+            "order_name": response.order.name,
+            "message": response.message,
+            "create_date": response.create_date.strftime("%d.%m.%Y %H:%M"),
+        }
+        for response in responses
+    ]
+    return JsonResponse({"responses": responses_data}, safe=False)
