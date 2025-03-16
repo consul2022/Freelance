@@ -43,7 +43,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const searchText = this.value.toLowerCase();
         orderCards.forEach(card => {
             const title = card.querySelector("h3").textContent.toLowerCase();
-            card.style.display = title.includes(searchText) ? "block" : "none";
+            const parent = card.closest('a');
+            parent.style.display = title.includes(searchText) ? "block" : "none";
         });
     });
 
@@ -55,6 +56,7 @@ document.addEventListener("DOMContentLoaded", function () {
         categoryCheckboxes.forEach(checkbox => {
             if (checkbox.checked) {
                 activeCategories.add(checkbox.dataset.category);
+
             }
         });
 
@@ -67,13 +69,14 @@ document.addEventListener("DOMContentLoaded", function () {
         orderCards.forEach(card => {
             const category = card.dataset.category;
             const subcategory = card.dataset.subcategory;
+            const parent = card.closest('a');
             if (
                 (activeCategories.size === 0 || activeCategories.has(category)) &&
                 (activeSubcategories.size === 0 || activeSubcategories.has(subcategory))
             ) {
-                card.style.display = "block";
+                parent.style.display = "block";
             } else {
-                card.style.display = "none";
+                parent.style.display = "none";
             }
         });
     }
