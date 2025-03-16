@@ -14,7 +14,6 @@ document.addEventListener('touchstart', function(event) {
 });
 
 
-// Объект с подкатегориями для каждой сферы деятельности
 const subactivities = {
   "development": [
     { value: "development_all_inclusive", label: "Сайты «под ключ»" },
@@ -96,68 +95,64 @@ const subactivities = {
   ]
 };
 
+// Функция загрузки подкатегорий для выбранной сферы
+function loadSubactivities(activity) {
+  const subactivitySelect = document.getElementById('subactivity');
+  subactivitySelect.innerHTML = '';
+  if (subactivities[activity]) {
+    subactivities[activity].forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.value;
+      option.textContent = item.label;
+      subactivitySelect.appendChild(option);
+    });
+  }
+}
+
+// Обработка после загрузки DOM
 document.addEventListener('DOMContentLoaded', () => {
-  try{
+  // Инициализация Telegram WebApp (если используется)
+  let user_id;
+  try {
     user_id = window.Telegram.WebApp.initDataUnsafe.user.id;
     function isDesktop() {
-        const userAgent = navigator.userAgent.toLowerCase();
-        return userAgent.includes("windows") || userAgent.includes("macintosh") || userAgent.includes("linux");
+      const userAgent = navigator.userAgent.toLowerCase();
+      return userAgent.includes("windows") || userAgent.includes("macintosh") || userAgent.includes("linux");
     }
     console.log(isDesktop());
     if (!isDesktop()) {
-        document.body.style.marginTop = "90px";
-        window.Telegram.WebApp.requestFullscreen();
+      document.body.style.marginTop = "90px";
+      window.Telegram.WebApp.requestFullscreen();
     }
-   } catch(e){
-     console.error(e);
-   }
+  } catch(e) {
+    console.error(e);
+  }
+
+  // Инициализируем подкатегории по выбранной сфере
   const activitySelect = document.getElementById('activity');
-  const subactivitySelect = document.getElementById('subactivity');
-
-  const responseForm = document.getElementById("create-order-form");
-  const nameText = document.getElementById("name");
-  const descriptionText  = document.getElementById("description");
-  const priceText  = document.getElementById("price");
-  const activityText  = document.getElementById("activity");
-  const subactivityText  = document.getElementById("subactivity");
-
-  // Инициализация подкатегорий для выбранной сферы
   loadSubactivities(activitySelect.value);
-
   activitySelect.addEventListener('change', function() {
     loadSubactivities(this.value);
   });
-  
-  // Логика выбора тегов
-  const tagsContainer = document.getElementById('tags-container');
-  const tagsInput = document.getElementById('tags-input');
-  
-  // Назначаем обработчик клика для каждого тега
-  tagsContainer.querySelectorAll('.tag').forEach(tagEl => {
-    tagEl.addEventListener('click', function() {
-      this.classList.toggle('active');
-      updateTagsInput();
-    });
+
+  // Обработчик кнопки "Назад"
+  document.getElementById("back").addEventListener('click', function(event) {
+    event.preventDefault();
+    window.location.href = "/exchange/office";
   });
 
-  // Функция обновления скрытого поля со списком выбранных тегов
-  function updateTagsInput() {
-    const selectedTags = Array.from(tagsContainer.querySelectorAll('.tag.active'))
-      .map(el => el.getAttribute('data-value'));
-    tagsInput.value = selectedTags.join(',');
-  }
-
+  // Обработка отправки формы
+  const responseForm = document.getElementById("create-order-form");
   responseForm.addEventListener("submit", function(e) {
     e.preventDefault();
-    const name = nameText.value.trim();
-    const description = descriptionText.value.trim();
-    const price = priceText.value.trim();
-    const activity = activityText.value.trim();
-    const subactivity = subactivityText.value.trim();
-    const tags = tagsInput.value; // выбранные теги
-    console.log(tags)
+    const name = document.getElementById("name").value.trim();
+    const description = document.getElementById("description").value.trim();
+    const price = document.getElementById("price").value.trim();
+    const activity = document.getElementById("activity").value.trim();
+    const subactivity = document.getElementById("subactivity").value.trim();
+    const tags = document.getElementById("tags-input").value;
 
-    // Получаем CSRF-токен для защиты POST-запроса
+    // Получаем CSRF-токен
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
     const formData = new URLSearchParams();
@@ -188,8 +183,9 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(data => {
       alert("Заказ создан успешно!");
       responseForm.reset();
-      // Сброс активных тегов после успешной отправки формы
-      tagsContainer.querySelectorAll('.tag.active').forEach(tagEl => tagEl.classList.remove('active'));
+      // Сброс выбранных тегов после успешной отправки формы
+      selectedTags = [];
+      renderSelectedTags();
       updateTagsInput();
     })
     .catch(error => {
@@ -199,20 +195,69 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Функция загрузки подкатегорий по выбранной сфере
-function loadSubactivities(activity) {
-  const subactivitySelect = document.getElementById('subactivity');
-  subactivitySelect.innerHTML = '';
-  if (subactivities[activity]) {
-    subactivities[activity].forEach(item => {
-      const option = document.createElement('option');
-      option.value = item.value;
-      option.textContent = item.label;
-      subactivitySelect.appendChild(option);
+/* Работа с тегами */
+// Извлекаем список тегов из скрытого контейнера
+const availableTags = Array.from(document.querySelectorAll('#available-tags .tag'))
+                             .map(el => el.getAttribute('data-value'));
+const tagSearchInput = document.getElementById('tag-search');
+const tagsDropdown = document.getElementById('tags-dropdown');
+const selectedTagsContainer = document.getElementById('selected-tags');
+const tagsInputHidden = document.getElementById('tags-input');
+let selectedTags = [];
+
+// Функция обновления скрытого поля с выбранными тегами
+function updateTagsInput() {
+  tagsInputHidden.value = selectedTags.join(',');
+}
+
+// Функция обновления выпадающего списка тегов по запросу
+function updateDropdown() {
+  const query = tagSearchInput.value.trim().toLowerCase();
+  const filteredTags = availableTags.filter(tag =>
+    tag.toLowerCase().includes(query) && !selectedTags.includes(tag)
+  );
+  tagsDropdown.innerHTML = '';
+  if (filteredTags.length > 0) {
+    filteredTags.forEach(tag => {
+      const item = document.createElement('div');
+      item.className = 'dropdown-item';
+      item.textContent = tag;
+      item.addEventListener('click', () => {
+        selectedTags.push(tag);
+        renderSelectedTags();
+        updateTagsInput();
+        tagSearchInput.value = '';
+        tagsDropdown.style.display = 'none';
+      });
+      tagsDropdown.appendChild(item);
     });
+    tagsDropdown.style.display = 'block';
+  } else {
+    tagsDropdown.style.display = 'none';
   }
 }
-document.getElementById("back").addEventListener('click', function(event) {
-event.preventDefault();
-window.location.href = "/exchange/office"
-})
+
+// Функция отображения выбранных тегов
+function renderSelectedTags() {
+  selectedTagsContainer.innerHTML = '';
+  selectedTags.forEach((tag, index) => {
+    const tagEl = document.createElement('span');
+    tagEl.className = 'tag';
+    tagEl.textContent = tag;
+    // При клике удаляем тег
+    tagEl.addEventListener('click', () => {
+      selectedTags.splice(index, 1);
+      renderSelectedTags();
+      updateTagsInput();
+    });
+    selectedTagsContainer.appendChild(tagEl);
+  });
+}
+
+tagSearchInput.addEventListener('input', updateDropdown);
+
+document.addEventListener('click', (e) => {
+  if (!tagSearchInput.contains(e.target) && !tagsDropdown.contains(e.target)) {
+    tagsDropdown.style.display = 'none';
+  }
+});
