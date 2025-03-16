@@ -1,5 +1,4 @@
 let user_id;
-
 document.addEventListener('touchstart', function(event) {
     const activeElement = document.activeElement;
     if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
@@ -34,6 +33,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const categoryCheckboxes = document.querySelectorAll(".category-checkbox");
     const subcategoryCheckboxes = document.querySelectorAll(".subcategory-checkbox");
 
+    // Функция обновления счетчика отображаемых заказов
+    function updateOrdersCount() {
+        let visibleCount = 0;
+        orderCards.forEach(card => {
+            const parent = card.closest('a');
+            if (parent.style.display !== "none") {
+                visibleCount++;
+            }
+        });
+        const ordersHeader = document.querySelector(".orders-header h2");
+        ordersHeader.textContent = `Заказы (${visibleCount})`;
+    }
+
     // Функция фильтрации заказов
     function applyFilters() {
         let activeCategories = new Set();
@@ -64,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 parent.style.display = "none";
             }
         });
+        updateOrdersCount();
     }
 
     // При изменении чекбокса категории — обновляем подкатегории
@@ -100,6 +113,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const parent = card.closest('a');
             parent.style.display = title.includes(searchText) ? "block" : "none";
         });
+        updateOrdersCount();
     });
 });
 
