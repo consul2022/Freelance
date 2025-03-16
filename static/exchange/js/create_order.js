@@ -1,5 +1,19 @@
 let user_id;
 
+document.addEventListener('touchstart', function(event) {
+    const activeElement = document.activeElement;
+
+    if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+        if (!activeElement.contains(event.target)) {
+            activeElement.blur();
+        }
+        if (event.target.tagName === 'BUTTON') {
+            event.target.click();
+        }
+    }
+});
+
+
 // Объект с подкатегориями для каждой сферы деятельности
 const subactivities = {
   "development": [

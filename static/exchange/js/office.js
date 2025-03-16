@@ -1,8 +1,23 @@
-// Задайте tg_id пользователя (например, полученный из авторизации)
+// Задайте user_id пользователя (например, полученный из авторизации)
 
-let tg_id;
+let user_id;
+
+document.addEventListener('touchstart', function(event) {
+    const activeElement = document.activeElement;
+
+    if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+        if (!activeElement.contains(event.target)) {
+            activeElement.blur();
+        }
+        if (event.target.tagName === 'BUTTON') {
+            event.target.click();
+        }
+    }
+});
+
+
 try {
-    tg_id = window.Telegram.WebApp.initDataUnsafe.user.id;
+    user_id = window.Telegram.WebApp.initDataUnsafe.user.id;
     function isDesktop() {
         const userAgent = navigator.userAgent.toLowerCase();
         return userAgent.includes("windows") || userAgent.includes("macintosh") || userAgent.includes("linux");
@@ -39,9 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchOrders();
 });
 
-// Получение заказов по tg_id
+// Получение заказов по user_id
 function fetchOrders() {
-  fetch(`/exchange/user/orders/${tg_id}/`)
+  fetch(`/exchange/user/orders/${user_id}/`)
     .then(response => response.json())
     .then(data => {
       renderOrders(data.orders);
