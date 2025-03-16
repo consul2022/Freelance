@@ -254,7 +254,7 @@ function renderSelectedTags() {
   });
 }
 
-tagSearchInput.addEventListener('input', updateDropdown);
+tagSearchInput.addEventListener('focus', updateDropdown);
 
 document.addEventListener('click', (e) => {
   if (!tagSearchInput.contains(e.target) && !tagsDropdown.contains(e.target)) {
