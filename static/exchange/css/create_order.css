@@ -56,35 +56,62 @@ body {
   font-size: 1rem;
   cursor: pointer;
   transition: background 0.2s ease-in-out;
+  margin-top: 10px;
 }
 
 .submit-button:hover {
   background: #7a5ccc;
 }
 
-/* Стили для тегов */
+/* Стили для поиска тегов и выпадающего списка */
 .tags-group {
   margin-bottom: 20px;
 }
 
-#tags-container {
+#tag-search {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #2e2e3f;
+  color: #e0e0e0;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.dropdown {
+  position: relative;
+  max-height: 150px;
+  overflow-y: auto;
+  background: #2e2e3f;
+  border: 1px solid #444;
+  border-radius: 8px;
+  margin-top: 5px;
+  display: none;
+  z-index: 100;
+}
+
+.dropdown .dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown .dropdown-item:hover {
+  background: #444;
+}
+
+.selected-tags {
+  margin-top: 10px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.tag {
-  display: inline-block;
+.selected-tags .tag {
   padding: 8px 12px;
-  background: #2e2e3f;
-  border-radius: 20px;
-  cursor: pointer;
-  user-select: none;
-  transition: background 0.2s;
-}
-
-.tag.active {
   background: #9C78FF;
+  border-radius: 20px;
+  color: #fff;
+  cursor: pointer;
 }
-#back{
-margin-top:10px;}
