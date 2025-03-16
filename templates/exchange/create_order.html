@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Создать заказ</title>
-  <link rel="stylesheet" href="{% static 'exchange/css/create_order.css' %}">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="container">
@@ -41,27 +41,34 @@
       <div class="form-group">
         <label for="subactivity">Подсфера деятельности</label>
         <select id="subactivity" name="subactivity" required>
-          <!-- В зависимости от выбранной сферы сюда будут загружаться подкатегории -->
+          <!-- Здесь будут подгружаться подкатегории -->
         </select>
       </div>
-      
       <!-- Блок выбора тегов -->
       <div class="form-group tags-group">
         <label>Выберите теги</label>
-        <div id="tags-container">
-          {% for tag in tags %}
-          <span class="tag" data-value="{{ tag }}">{{ tag }}</span>
-          {% endfor %}
-        </div>
+        <!-- Поле для поиска тегов -->
+        <input type="text" id="tag-search" placeholder="Поиск тега..." autocomplete="off">
+        <!-- Контейнер выпадающего списка -->
+        <div id="tags-dropdown" class="dropdown"></div>
+        <!-- Контейнер для выбранных тегов -->
+        <div id="selected-tags" class="selected-tags"></div>
         <!-- Скрытое поле для передачи выбранных тегов -->
         <input type="hidden" name="tag" id="tags-input" value="">
       </div>
-      
       <button type="submit" class="submit-button">Создать заказ</button>
-      <button type="submit" id="back" class="submit-button">Назад</button>
+      <button type="button" id="back" class="submit-button">Назад</button>
     </form>
   </div>
-  <script src="{% static 'exchange/js/create_order.js' %}"></script>
+  
+  <!-- Скрытый контейнер с исходным списком тегов -->
+  <div id="available-tags" style="display:none;">
+    {% for tag in tags %}
+      <span class="tag" data-value="{{ tag }}">{{ tag }}</span>
+    {% endfor %}
+  </div>
+  
+  <script src="script.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </body>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 </html>
