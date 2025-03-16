@@ -1,5 +1,6 @@
 /* Общие стили */
 body {
+    padding-bottom: 40px !important;
     font-family: 'Inter', sans-serif;
     background-color: #1e1e2e;
     color: #e0e0e0;
