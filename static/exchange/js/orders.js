@@ -2,7 +2,6 @@ let user_id;
 
 document.addEventListener('touchstart', function(event) {
     const activeElement = document.activeElement;
-
     if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
         if (!activeElement.contains(event.target)) {
             activeElement.blur();
@@ -12,7 +11,6 @@ document.addEventListener('touchstart', function(event) {
         }
     }
 });
-
 
 try {
     user_id = window.Telegram.WebApp.initDataUnsafe.user.id;
@@ -26,11 +24,9 @@ try {
         document.querySelector(".sidebar").style.paddingTop = "90px";
         window.Telegram.WebApp.requestFullscreen();
     }
-
 } catch (e) {
     console.error("Could not get user ID from Telegram Web App");
 }
-
 
 document.addEventListener("DOMContentLoaded", function () {
     const searchInput = document.getElementById("search");
@@ -38,17 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const categoryCheckboxes = document.querySelectorAll(".category-checkbox");
     const subcategoryCheckboxes = document.querySelectorAll(".subcategory-checkbox");
 
-    // Поиск по заказам
-    searchInput.addEventListener("input", function () {
-        const searchText = this.value.toLowerCase();
-        orderCards.forEach(card => {
-            const title = card.querySelector("h3").textContent.toLowerCase();
-            const parent = card.closest('a');
-            parent.style.display = title.includes(searchText) ? "block" : "none";
-        });
-    });
-
-    // Фильтрация заказов по категориям и подкатегориям
+    // Функция фильтрации заказов
     function applyFilters() {
         let activeCategories = new Set();
         let activeSubcategories = new Set();
@@ -56,7 +42,6 @@ document.addEventListener("DOMContentLoaded", function () {
         categoryCheckboxes.forEach(checkbox => {
             if (checkbox.checked) {
                 activeCategories.add(checkbox.dataset.category);
-
             }
         });
 
@@ -81,8 +66,41 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    categoryCheckboxes.forEach(checkbox => checkbox.addEventListener("change", applyFilters));
-    subcategoryCheckboxes.forEach(checkbox => checkbox.addEventListener("change", applyFilters));
+    // При изменении чекбокса категории — обновляем подкатегории
+    categoryCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", function () {
+            const parentCategory = this.closest(".category");
+            const childSubCheckboxes = parentCategory.querySelectorAll(".subcategory-checkbox");
+            childSubCheckboxes.forEach(sub => sub.checked = this.checked);
+            applyFilters();
+        });
+    });
+
+    // При изменении чекбокса подкатегории — обновляем состояние родительской категории
+    subcategoryCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", function () {
+            const parentCategory = this.closest(".category");
+            const categoryCheckbox = parentCategory.querySelector(".category-checkbox");
+            const childSubCheckboxes = parentCategory.querySelectorAll(".subcategory-checkbox");
+            // Если все подкатегории отмечены, то отмечаем и категорию
+            let allChecked = true;
+            childSubCheckboxes.forEach(sub => {
+                if (!sub.checked) allChecked = false;
+            });
+            categoryCheckbox.checked = allChecked;
+            applyFilters();
+        });
+    });
+
+    // Поиск по заказам
+    searchInput.addEventListener("input", function () {
+        const searchText = this.value.toLowerCase();
+        orderCards.forEach(card => {
+            const title = card.querySelector("h3").textContent.toLowerCase();
+            const parent = card.closest('a');
+            parent.style.display = title.includes(searchText) ? "block" : "none";
+        });
+    });
 });
 
 // Переключение видимости фильтров на мобильных устройствах
@@ -98,9 +116,4 @@ function toggleSubcategories(labelElement) {
     const categoryItem = labelElement.closest(".category");
     const subcategoriesList = categoryItem.querySelector(".subcategories");
     subcategoriesList.classList.toggle("active");
-//    if (subcategoriesList.style.display === "none" || subcategoriesList.style.display === "") {
-//        subcategoriesList.style.display = "block";
-//    } else {
-//        subcategoriesList.style.display = "none";
-//    }
 }
