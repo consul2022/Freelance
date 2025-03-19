@@ -1,16 +1,15 @@
 let user_id;
 
 document.addEventListener('touchstart', function(event) {
-    const activeElement = document.activeElement;
-
-    if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
-        if (!activeElement.contains(event.target)) {
-            activeElement.blur();
-        }
-        if (event.target.tagName === 'BUTTON') {
-            event.target.click();
-        }
+  const activeElement = document.activeElement;
+  if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+    if (!activeElement.contains(event.target)) {
+      activeElement.blur();
     }
+    if (event.target.tagName === 'BUTTON') {
+      event.target.click();
+    }
+  }
 });
 
 // Объект с подкатегориями для каждой сферы деятельности
@@ -95,65 +94,131 @@ const subactivities = {
   ]
 };
 
-document.addEventListener('DOMContentLoaded', () => {
-
-    try {
-        user_id = window.Telegram.WebApp.initDataUnsafe.user.id;
-        function isDesktop() {
-            const userAgent = navigator.userAgent.toLowerCase();
-            return userAgent.includes("windows") || userAgent.includes("macintosh") || userAgent.includes("linux");
-        }
-        console.log(isDesktop());
-        if (!isDesktop()) {
-            document.body.style.marginTop = "90px";
-            window.Telegram.WebApp.requestFullscreen();
-        }
-
-    } catch (e) {
-        console.error("Could not get user ID from Telegram Web App");
-    }
-
-  const activitySelect = document.getElementById('activity');
+// Функция загрузки подкатегорий по выбранной сфере
+function loadSubactivities(activity, selectedSubactivity = null) {
   const subactivitySelect = document.getElementById('subactivity');
+  subactivitySelect.innerHTML = '';
+  if (subactivities[activity]) {
+    subactivities[activity].forEach(item => {
+      const option = document.createElement('option');
+      option.value = item.value;
+      option.textContent = item.label;
+      if (selectedSubactivity && item.value === selectedSubactivity) {
+        option.selected = true;
+      }
+      subactivitySelect.appendChild(option);
+    });
+  }
+}
 
-  // Инициализация подкатегорий для выбранной сферы, с установкой сохранённого значения (если есть)
+document.addEventListener('DOMContentLoaded', () => {
+  // Инициализация Telegram WebApp (если используется)
+  try {
+    user_id = window.Telegram.WebApp.initDataUnsafe.user.id;
+    function isDesktop() {
+      const userAgent = navigator.userAgent.toLowerCase();
+      return userAgent.includes("windows") || userAgent.includes("macintosh") || userAgent.includes("linux");
+    }
+    if (!isDesktop()) {
+      document.body.style.marginTop = "90px";
+      window.Telegram.WebApp.requestFullscreen();
+    }
+  } catch(e) {
+    console.error("Could not get user ID from Telegram Web App", e);
+  }
+
+  // Инициализация подкатегорий с учётом сохранённого значения
+  const activitySelect = document.getElementById('activity');
   loadSubactivities(activitySelect.value, initialSubactivity);
-
   activitySelect.addEventListener('change', function() {
     loadSubactivities(this.value);
   });
-  
-  // Логика выбора тегов
-  const tagsContainer = document.getElementById('tags-container');
-  const tagsInput = document.getElementById('tags-input');
-  
-  tagsContainer.querySelectorAll('.tag').forEach(tagEl => {
-    tagEl.addEventListener('click', function() {
-      this.classList.toggle('active');
-      updateTagsInput();
-    });
-  });
-  
+
+  // Работа с тегами – механизм, аналогичный create_order.js
+  const availableTags = Array.from(document.querySelectorAll('#available-tags .tag'))
+                             .map(el => el.getAttribute('data-value'));
+  const tagSearchInput = document.getElementById('tag-search');
+  const tagsDropdown = document.getElementById('tags-dropdown');
+  const selectedTagsContainer = document.getElementById('selected-tags');
+  const tagsInputHidden = document.getElementById('tags-input');
+  let selectedTags = tagsInputHidden.value ? tagsInputHidden.value.split(',') : [];
+
   function updateTagsInput() {
-    const selectedTags = Array.from(tagsContainer.querySelectorAll('.tag.active'))
-      .map(el => el.getAttribute('data-value'));
-    tagsInput.value = selectedTags.join(',');
+    tagsInputHidden.value = selectedTags.join(',');
   }
-  
+
+  function renderSelectedTags() {
+    selectedTagsContainer.innerHTML = '';
+    selectedTags.forEach((tag, index) => {
+      const tagEl = document.createElement('span');
+      tagEl.className = 'tag';
+      tagEl.textContent = tag;
+      tagEl.addEventListener('click', () => {
+        selectedTags.splice(index, 1);
+        renderSelectedTags();
+        updateTagsInput();
+      });
+      selectedTagsContainer.appendChild(tagEl);
+    });
+  }
+
+  renderSelectedTags();
+
+  function updateDropdown() {
+    const query = tagSearchInput.value.trim().toLowerCase();
+    const filteredTags = availableTags.filter(tag =>
+      tag.toLowerCase().includes(query) && !selectedTags.includes(tag)
+    );
+    tagsDropdown.innerHTML = '';
+    if (filteredTags.length > 0) {
+      filteredTags.forEach(tag => {
+        const item = document.createElement('div');
+        item.className = 'dropdown-item';
+        item.textContent = tag;
+        item.addEventListener('click', () => {
+          selectedTags.push(tag);
+          renderSelectedTags();
+          updateTagsInput();
+          tagSearchInput.value = '';
+          tagsDropdown.style.display = 'none';
+        });
+        tagsDropdown.appendChild(item);
+      });
+      tagsDropdown.style.display = 'block';
+    } else {
+      tagsDropdown.style.display = 'none';
+    }
+  }
+
+  tagSearchInput.addEventListener('input', updateDropdown);
+  tagSearchInput.addEventListener('focus', updateDropdown);
+
+  document.addEventListener('click', (e) => {
+    if (!tagSearchInput.contains(e.target) && !tagsDropdown.contains(e.target)) {
+      tagsDropdown.style.display = 'none';
+    }
+  });
+
+  // Обработчик кнопки "Назад"
+  document.getElementById("back").addEventListener('click', function(event) {
+    event.preventDefault();
+    window.location.href = "/exchange/office";
+  });
+
+  // Обработка отправки формы редактирования заказа
   const editOrderForm = document.getElementById("edit-order-form");
-  
   editOrderForm.addEventListener("submit", function(e) {
     e.preventDefault();
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    
+
     const formData = new URLSearchParams();
     formData.append('name', document.getElementById("name").value.trim());
     formData.append('description', document.getElementById("description").value.trim());
     formData.append('price', document.getElementById("price").value.trim());
     formData.append('activity', document.getElementById("activity").value.trim());
     formData.append('subactivity', document.getElementById("subactivity").value.trim());
-    formData.append('tags', tagsInput.value);
-    
+    formData.append('tags', tagsInputHidden.value);
+
     fetch(editOrderForm.action, {
       method: "POST",
       headers: {
@@ -179,93 +244,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
-
-// Функция загрузки подкатегорий по выбранной сфере
-function loadSubactivities(activity, selectedSubactivity = null) {
-  const subactivitySelect = document.getElementById('subactivity');
-  subactivitySelect.innerHTML = '';
-  if (subactivities[activity]) {
-    subactivities[activity].forEach(item => {
-      const option = document.createElement('option');
-      option.value = item.value;
-      option.textContent = item.label;
-      if (selectedSubactivity && item.value === selectedSubactivity) {
-        option.selected = true;
-      }
-      subactivitySelect.appendChild(option);
-    });
-  }
-}
-
-/* Работа с тегами */
-// Извлекаем список тегов из скрытого контейнера
-const availableTags = Array.from(document.querySelectorAll('#available-tags .tag'))
-                             .map(el => el.getAttribute('data-value'));
-const tagSearchInput = document.getElementById('tag-search');
-const tagsDropdown = document.getElementById('tags-dropdown');
-const selectedTagsContainer = document.getElementById('selected-tags');
-const tagsInputHidden = document.getElementById('tags-input');
-let selectedTags = [];
-
-// Функция обновления скрытого поля с выбранными тегами
-function updateTagsInput() {
-  tagsInputHidden.value = selectedTags.join(',');
-}
-
-// Функция обновления выпадающего списка тегов по запросу
-function updateDropdown() {
-  const query = tagSearchInput.value.trim().toLowerCase();
-  const filteredTags = availableTags.filter(tag =>
-    tag.toLowerCase().includes(query) && !selectedTags.includes(tag)
-  );
-  tagsDropdown.innerHTML = '';
-  if (filteredTags.length > 0) {
-    filteredTags.forEach(tag => {
-      const item = document.createElement('div');
-      item.className = 'dropdown-item';
-      item.textContent = tag;
-      item.addEventListener('click', () => {
-        selectedTags.push(tag);
-        renderSelectedTags();
-        updateTagsInput();
-        tagSearchInput.value = '';
-        tagsDropdown.style.display = 'none';
-      });
-      tagsDropdown.appendChild(item);
-    });
-    tagsDropdown.style.display = 'block';
-  } else {
-    tagsDropdown.style.display = 'none';
-  }
-}
-
-// Функция отображения выбранных тегов
-function renderSelectedTags() {
-  selectedTagsContainer.innerHTML = '';
-  selectedTags.forEach((tag, index) => {
-    const tagEl = document.createElement('span');
-    tagEl.className = 'tag';
-    tagEl.textContent = tag;
-    // При клике удаляем тег
-    tagEl.addEventListener('click', () => {
-      selectedTags.splice(index, 1);
-      renderSelectedTags();
-      updateTagsInput();
-    });
-    selectedTagsContainer.appendChild(tagEl);
-  });
-}
-
-tagSearchInput.addEventListener('focus', updateDropdown);
-
-document.addEventListener('click', (e) => {
-  if (!tagSearchInput.contains(e.target) && !tagsDropdown.contains(e.target)) {
-    tagsDropdown.style.display = 'none';
-  }
-});
-
-
-document.getElementById("back").addEventListener('click', function(event) {
-event.preventDefault();
-window.location.href = "/exchange/office"
-})
