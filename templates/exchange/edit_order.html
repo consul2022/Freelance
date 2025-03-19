@@ -12,7 +12,7 @@
     <header class="form-header">
       <h1>Редактировать заказ</h1>
     </header>
-    <!-- Предполагается, что URL edit_order принимает order.id -->
+    <!-- URL edit_order принимает order.id -->
     <form id="edit-order-form" action="{% url 'edit_order' order.id %}" method="POST">
       {% csrf_token %}
       <div class="form-group">
@@ -45,10 +45,7 @@
           <!-- Подкатегории будут загружаться через JS -->
         </select>
       </div>
-
-
-
-            <!-- Блок выбора тегов -->
+      <!-- Блок выбора тегов -->
       <div class="form-group tags-group">
         <label>Выберите теги</label>
         <!-- Поле для поиска тегов -->
@@ -57,29 +54,24 @@
         <div id="tags-dropdown" class="dropdown"></div>
         <!-- Контейнер для выбранных тегов -->
         <div id="selected-tags" class="selected-tags"></div>
-        <!-- Скрытое поле для передачи выбранных тегов -->
-<!-- Скрытое поле для передачи выбранных тегов (список имен тегов через запятую) -->
+        <!-- Скрытое поле для передачи выбранных тегов (имена тегов через запятую) -->
         <input type="hidden" name="tags" id="tags-input" value="{% for tag in order.tags.all %}{{ tag.name }}{% if not forloop.last %},{% endif %}{% endfor %}">
       </div>
-
       <button type="submit" class="submit-button">Сохранить изменения</button>
-      <button type="submit" id="back" class="submit-button">Назад</button>
+      <button type="button" id="back" class="submit-button">Назад</button>
     </form>
   </div>
-  <!-- Контейнер для выпадающего списка тегов -->
-  <div id="tags-container">
-      {% for tag in tags %}
-        <span class="tag {% if tag in order.tags.all %}active{% endif %}" data-value="{{ tag.name }}">
-          {{ tag.name }}
-        </span>
-      {% endfor %}
-    </div>
-
-  <!-- Перед подключением скрипта передаём значение текущей подсферы в JS -->
+  <!-- Скрытый контейнер с исходным списком тегов -->
+  <div id="available-tags" style="display:none;">
+    {% for tag in tags %}
+      <span class="tag" data-value="{{ tag.name }}">{{ tag.name }}</span>
+    {% endfor %}
+  </div>
+  <!-- Перед подключением скрипта передаём значение текущей подсферы -->
   <script>
     var initialSubactivity = "{{ order.subactivity }}";
   </script>
   <script src="{% static 'exchange/js/edit_order.js' %}"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
 </body>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
 </html>
