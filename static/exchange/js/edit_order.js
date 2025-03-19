@@ -197,6 +197,74 @@ function loadSubactivities(activity, selectedSubactivity = null) {
   }
 }
 
+/* Работа с тегами */
+// Извлекаем список тегов из скрытого контейнера
+const availableTags = Array.from(document.querySelectorAll('#available-tags .tag'))
+                             .map(el => el.getAttribute('data-value'));
+const tagSearchInput = document.getElementById('tag-search');
+const tagsDropdown = document.getElementById('tags-dropdown');
+const selectedTagsContainer = document.getElementById('selected-tags');
+const tagsInputHidden = document.getElementById('tags-input');
+let selectedTags = [];
+
+// Функция обновления скрытого поля с выбранными тегами
+function updateTagsInput() {
+  tagsInputHidden.value = selectedTags.join(',');
+}
+
+// Функция обновления выпадающего списка тегов по запросу
+function updateDropdown() {
+  const query = tagSearchInput.value.trim().toLowerCase();
+  const filteredTags = availableTags.filter(tag =>
+    tag.toLowerCase().includes(query) && !selectedTags.includes(tag)
+  );
+  tagsDropdown.innerHTML = '';
+  if (filteredTags.length > 0) {
+    filteredTags.forEach(tag => {
+      const item = document.createElement('div');
+      item.className = 'dropdown-item';
+      item.textContent = tag;
+      item.addEventListener('click', () => {
+        selectedTags.push(tag);
+        renderSelectedTags();
+        updateTagsInput();
+        tagSearchInput.value = '';
+        tagsDropdown.style.display = 'none';
+      });
+      tagsDropdown.appendChild(item);
+    });
+    tagsDropdown.style.display = 'block';
+  } else {
+    tagsDropdown.style.display = 'none';
+  }
+}
+
+// Функция отображения выбранных тегов
+function renderSelectedTags() {
+  selectedTagsContainer.innerHTML = '';
+  selectedTags.forEach((tag, index) => {
+    const tagEl = document.createElement('span');
+    tagEl.className = 'tag';
+    tagEl.textContent = tag;
+    // При клике удаляем тег
+    tagEl.addEventListener('click', () => {
+      selectedTags.splice(index, 1);
+      renderSelectedTags();
+      updateTagsInput();
+    });
+    selectedTagsContainer.appendChild(tagEl);
+  });
+}
+
+tagSearchInput.addEventListener('focus', updateDropdown);
+
+document.addEventListener('click', (e) => {
+  if (!tagSearchInput.contains(e.target) && !tagsDropdown.contains(e.target)) {
+    tagsDropdown.style.display = 'none';
+  }
+});
+
+
 document.getElementById("back").addEventListener('click', function(event) {
 event.preventDefault();
 window.location.href = "/exchange/office"
