@@ -13,23 +13,6 @@ document.addEventListener('touchstart', function(event) {
     }
 });
 
-try {
-    user_id = window.Telegram.WebApp.initDataUnsafe.user.id;
-    function isDesktop() {
-        const userAgent = navigator.userAgent.toLowerCase();
-        return userAgent.includes("windows") || userAgent.includes("macintosh") || userAgent.includes("linux");
-    }
-    console.log(isDesktop());
-    if (!isDesktop()) {
-        document.body.style.marginTop = "90px";
-        window.Telegram.WebApp.requestFullscreen();
-    }
-
-} catch (e) {
-    console.error("Could not get user ID from Telegram Web App");
-    }
-
-
 // Объект с подкатегориями для каждой сферы деятельности
 const subactivities = {
   "development": [
@@ -113,6 +96,23 @@ const subactivities = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    try {
+        user_id = window.Telegram.WebApp.initDataUnsafe.user.id;
+        function isDesktop() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            return userAgent.includes("windows") || userAgent.includes("macintosh") || userAgent.includes("linux");
+        }
+        console.log(isDesktop());
+        if (!isDesktop()) {
+            document.body.style.marginTop = "90px";
+            window.Telegram.WebApp.requestFullscreen();
+        }
+
+    } catch (e) {
+        console.error("Could not get user ID from Telegram Web App");
+    }
+
   const activitySelect = document.getElementById('activity');
   const subactivitySelect = document.getElementById('subactivity');
 
