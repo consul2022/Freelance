@@ -63,7 +63,7 @@ body {
   background: #7a5ccc;
 }
 
-/* Стили для тегов */
+/* Стили для поиска тегов и выпадающего списка */
 .tags-group {
   margin-bottom: 20px;
 }
@@ -116,5 +116,6 @@ body {
   cursor: pointer;
 }
 
-#back{
-margin-top:10px;}
+#back {
+  margin-top: 10px;
+}
