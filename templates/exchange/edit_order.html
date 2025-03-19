@@ -45,26 +45,36 @@
           <!-- Подкатегории будут загружаться через JS -->
         </select>
       </div>
-      
-      <!-- Блок выбора тегов -->
+
+
+
+            <!-- Блок выбора тегов -->
       <div class="form-group tags-group">
         <label>Выберите теги</label>
-        <div id="tags-container">
-          {% for tag in tags %}
-            <span class="tag {% if tag in order.tags.all %}active{% endif %}" data-value="{{ tag.name }}">
-              {{ tag.name }}
-            </span>
-          {% endfor %}
-        </div>
-        <!-- Скрытое поле для передачи выбранных тегов (список имен тегов через запятую) -->
+        <!-- Поле для поиска тегов -->
+        <input type="text" id="tag-search" placeholder="Поиск тега..." autocomplete="off">
+        <!-- Контейнер выпадающего списка -->
+        <div id="tags-dropdown" class="dropdown"></div>
+        <!-- Контейнер для выбранных тегов -->
+        <div id="selected-tags" class="selected-tags"></div>
+        <!-- Скрытое поле для передачи выбранных тегов -->
+<!-- Скрытое поле для передачи выбранных тегов (список имен тегов через запятую) -->
         <input type="hidden" name="tags" id="tags-input" value="{% for tag in order.tags.all %}{{ tag.name }}{% if not forloop.last %},{% endif %}{% endfor %}">
       </div>
-      
+
       <button type="submit" class="submit-button">Сохранить изменения</button>
       <button type="submit" id="back" class="submit-button">Назад</button>
     </form>
   </div>
-  
+  <!-- Контейнер для выпадающего списка тегов -->
+  <div id="tags-container">
+      {% for tag in tags %}
+        <span class="tag {% if tag in order.tags.all %}active{% endif %}" data-value="{{ tag.name }}">
+          {{ tag.name }}
+        </span>
+      {% endfor %}
+    </div>
+
   <!-- Перед подключением скрипта передаём значение текущей подсферы в JS -->
   <script>
     var initialSubactivity = "{{ order.subactivity }}";
