@@ -41,7 +41,7 @@ async def hello(message):
     connection.commit()
     buttons = InlineKeyboardMarkup(
         inline_keyboard=[[InlineKeyboardButton(text="Искать заказ 🔍", web_app=WebAppInfo(url="https://innofreelance.ru/exchange/orders")),
-                          InlineKeyboardButton(text="Разместить заказ 📢", web_app=WebAppInfo(url="https://innofreelance.ru/exchange/office"))]])
+                          InlineKeyboardButton(text="Создать заказ 📢", web_app=WebAppInfo(url="https://innofreelance.ru/exchange/office"))]])
 
     await message.answer(text="""
 

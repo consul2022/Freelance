@@ -33,7 +33,7 @@
 <!--            </div>-->
             <div class="order-header">
                 <h3>{{ order.name }}</h3>
-                <span class="order-price">{{ order.price|floatformat:0 }} руб.</span>
+                <span class="order-price">{{ order.price|floatformat:0 }} ₽</span>
             </div>
             <div class="order-meta">
                 <span class="order-responses">откликов: {{ order.response_set.count }}</span>

@@ -84,7 +84,7 @@ function renderOrders(orders) {
     orderCard.innerHTML = `
       <div class="order-header">
         <h3>${order.name}</h3>
-        <span class="order-price">${parseFloat(order.price).toFixed(0)} руб.</span>
+        <span class="order-price">${parseFloat(order.price).toFixed(0)} ₽</span>
       </div>
       <p class="order-description">${truncate(order.description, 100)}</p>
       <div class="order-meta">

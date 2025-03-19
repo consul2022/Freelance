@@ -46,19 +46,24 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+    gap: 15px;
 }
 
 .order-header h3 {
-    font-size: 1.4rem;
+    flex: 1;
+    font-size: 1.2rem;
     font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
     color: #ffffff;
     margin: 0;
 }
 
 .order-price {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     color: #9C78FF;
     font-weight: bold;
+    white-space: nowrap;
 }
 
 /* Описание заказа */

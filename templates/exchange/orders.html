@@ -61,7 +61,7 @@
                 <div class="order-card" data-category="{{ order.activity }}" data-subcategory="{{ order.subactivity }}">
                     <div class="order-header">
                         <h3>{{ order.name }}</h3>
-                        <span class="order-price">{{ order.price|floatformat:0 }} руб.</span>
+                        <span class="order-price">{{ order.price|floatformat:0 }} ₽</span>
                     </div>
                     <p class="order-description">{{ order.description|truncatechars:100 }}</p>
                     <div class="order-meta">

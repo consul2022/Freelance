@@ -171,6 +171,7 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
+    gap: 15px;
 }
 
 .order-header h3 {
@@ -184,7 +185,7 @@ body {
 }
 
 .order-price {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     color: #9C78FF;
     font-weight: bold;
     white-space: nowrap;
